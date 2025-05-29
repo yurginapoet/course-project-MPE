@@ -9,7 +9,7 @@
 - [ ] Add sparse matrix solver (CGM)
 - [ ]  Add implicit 3-layer time scheme
 - [ ]  Add 1st boundary conditionals
-- [ ]  Add 1nd boundary conditionals
+- [ ]  Add 2nd boundary conditionals
 - [ ]  Rewrite ```main()``` so program will work
 - [ ]  Refactor the code
 - [ ]  Run the tests (maybe automate testing)
@@ -23,6 +23,6 @@
 `data/c1.txt` - first boundary conditions   
 
 ## Files
-`main.cc` - main file o fthe program
+`main.cc` - main file of the program
 ## Functions
 to be continued...
