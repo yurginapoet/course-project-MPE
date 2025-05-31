@@ -36,7 +36,7 @@ void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum)
     in >> elList[i].lambda;
   in.close();
 
-  // Read gamma
+  // Read sigma
   in.open("../data/gamma.txt");
   in >> gamma;
   in.close();

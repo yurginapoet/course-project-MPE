@@ -5,14 +5,14 @@ int main()
 {
   vector<nd> mesh;
   vector<el> elList;
-  double gamma;
+  double sigma;
   int fnum;
 
   SLAE slae{}, LU{};
   LOS v{};
   TimeMesh timemesh{};
 
-  input(mesh, elList, gamma, fnum);
+  input(mesh, elList, sigma, fnum);
   readTimeMesh(timemesh);
   readSplitTimeMesh(timemesh);
 

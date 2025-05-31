@@ -84,7 +84,7 @@ struct BoundaryConditions
 /*============================== I/O  FUNCTIONS =============================*/
 
 // Input data
-void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum);
+void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum);
 
 // Read time mesh
 void readTimeMesh(TimeMesh &time);
@@ -101,7 +101,7 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond);
 /*========================= LOCAL MATRICES FUNCTIONS ========================*/
 
 // Compute determinant
-double detD(const el &e);
+double detD(el &e);
 
 // Compute factorial
 long fact(int a);
@@ -109,18 +109,18 @@ long fact(int a);
 // Integrate L1*L2*L3
 double intL(int nv[], double det);
 
-// // Compute mass matrix element M_ij
-// double Mij(int i, int j, const el &e, double det);
+// Compute mass matrix element M_ij
+double Mij(int i, int j, el e, double det);
 
-// // Get local mass matrix M
-// void getM(vector<vector<double>> &M, double gamma, const el &e);
+// Get local mass matrix M
+void getM(vector<vector<double>> &M, double gamma, el e);
 
-// // Get local stiffness matrix G
-// void getG(vector<vector<double>> &G, const el &e);
+// Get local stiffness matrix G
+void getG(vector<vector<double>> &G, el e);
 
-// // Get local load vector b
-// void getb(vector<double> &b, const el &e, double gamma, int s, double t,
-//           const vector<double> &q1, const vector<double> &q2, double dt);
+// Get local load vector b
+void getb(vector<double> &b, el e, double gamma, int s, double t,
+          const vector<double> &q1, const vector<double> &q2, double dt);
 
 /*======================== SPARSE MATRICES FUNCTIONS =======================*/
 
@@ -159,18 +159,21 @@ void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
 
 /*============================== F/U FUNCTIONS =============================*/
 
-// add switch!!!!!!!!1
-double uInit(nd &n, double t)
-{ // примерная функция, уточнить
-  return n.r * n.r + n.z * n.z + t * t;
-}
-double sigma(nd &n, double t)
-{
-  // Примерная функция сигмы, нужно уточнить
-  return n.r * n.r + n.z * n.z + t * t;
-}
-double F(nd &n, double t)
-{
-  // Примерная функция, нужно уточнить
-  return n.r * n.r + n.z * n.z + t * t;
-}
+double f(nd &n, double t, int flag);
+double u(nd &n, double t, int flag);
+
+// // add switch!!!!!!!!1
+// double uInit(nd &n, double t)
+// { // примерная функция, уточнить
+//   return n.r * n.r + n.z * n.z + t * t;
+// }
+// double sigma(nd &n, double t)
+// {
+//   // Примерная функция сигмы, нужно уточнить
+//   return n.r * n.r + n.z * n.z + t * t;
+// }
+// double F(nd &n, double t)
+// {
+//   // Примерная функция, нужно уточнить
+//   return n.r * n.r + n.z * n.z + t * t;
+// }
