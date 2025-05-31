@@ -9,6 +9,7 @@
 #include <vector>
 using namespace std;
 
+/*============================= DATA STRUCTURES =============================*/
 // структура узла сетки
 struct nd
 {
@@ -30,114 +31,146 @@ struct el
   nd nds[3];
 };
 
-// структура разреженной матрицы (не используется)
-struct SparseMatrix
+// time mesh structure
+struct TimeMesh
 {
-  vector<int> ia;    // Индексы строк (начало строк)
-  vector<int> ja;    // Индексы столбцов
-  vector<double> au; // Верхняя часть матрицы (значения на верхней диагонали)
-  vector<double> al; // Нижняя часть матрицы (значения на нижней диагонали)
-  vector<double> di; // Диагональные элементы (если они есть)
-  int n;             // Размерность матрицы
+  vector<double> t{};
+  vector<double> tNew{};
 
-  // Конструктор
-  SparseMatrix(int size)
-  {
-    n = size;
-    ia.resize(n + 1, 0);
-    ja.resize(n, 0);
-    au.resize(n, 0.0);
-    al.resize(n, 0.0);
-    di.resize(n, 0.0);
-  }
+  vector<vector<double>> q{};
+  vector<double> qti{};
+  vector<double> qti_1{};
+  vector<double> qti_2{};
+
+  void Swap();
+  void SaveWeights(int ti);
 };
 
-/*========================= I/O  FUNCTIONS =========================*/
+// time mesh funcs
+void TimeMesh::Swap()
+{
+  std::swap(qti_2, qti_1);
+  std::swap(qti_1, qti);
+}
+void TimeMesh::SaveWeights(int ti) { q[ti] = qti; }
+
+// sparse matrix structure
+struct SparseMatrix
+{
+  vector<int> ig{}, jg{};
+  vector<double> ggl{}, ggu{}, di{};
+};
+
+// SLAE structure
+struct SLAE
+{
+  SparseMatrix A{};
+  vector<double> q{}, b{};
+};
+
+// LOS structure
+struct LOS
+{
+  vector<double> r1{}, rk{}, z1{}, p1{}, Ar{}, p{}, mult{};
+};
+
+// Boundary conditions structure
+struct BoundaryConditions
+{
+  int type{}, function{};
+  vector<int> VerticesNumbers{};
+};
+
+/*============================== I/O  FUNCTIONS =============================*/
 
 // Input data
-void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum,
-           vector<double> &time);
+void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum);
+
+// Read time mesh
+void readTimeMesh(TimeMesh &time);
+
+// Read time steps
+void readSplitTimeMesh(TimeMesh &time);
+
+// boundaries input
+void readBoundaryCondition(vector<BoundaryConditions> &cond);
+
 // Output results
-void output(const vector<double> &q, const vector<nd> &mesh, double t);
+// void output(const vector<double> &q, const vector<nd> &mesh, double t);
 
-/*==================== LOCAL MATRICES FUNCTIONS ====================*/
+/*========================= LOCAL MATRICES FUNCTIONS ========================*/
 
-double detD(const el &e);          // Compute determinant
-long fact(int a);                  // Factorial
-double intL(int nv[], double det); // Integrate L1*L2*L3
-double Mij(int i, int j, const el &e,
-           double det); // Compute mass matrix element M_ij
-void getM(vector<vector<double>> &M, double gamma,
-          const el &e);                            // Get local mass matrix
-void getG(vector<vector<double>> &G, const el &e); // Get local stiffness matrix
-void getb(vector<double> &b, const el &e, double gamma, int s, double t,
-          const vector<double> &q1, const vector<double> &q2,
-          double dt); // Get local load vector
+// Compute determinant
+double detD(const el &e);
 
-/*=================== SPARSE MATRICES FUNCTIONS ===================*/
+// Compute factorial
+long fact(int a);
 
-void buildPortrait(vector<vector<int>> &list, vector<int> &ig, vector<int> &jg,
-                   const vector<el> &elList); // Build sparse matrix portrait
+// Integrate L1*L2*L3
+double intL(int nv[], double det);
 
-void addElementToGlobal(int i, int j, double elem, vector<double> &di,
-                        vector<double> &gg, const vector<int> &ig,
-                        const vector<int> &jg); // Add element to sparse matrix
+// // Compute mass matrix element M_ij
+// double Mij(int i, int j, const el &e, double det);
 
-void mult(const vector<double> &di, const vector<double> &gg,
-          const vector<int> &ig, const vector<int> &jg, const vector<double> &x,
-          vector<double> &y); // Matrix-vector multiplication for sparse matrix
+// // Get local mass matrix M
+// void getM(vector<vector<double>> &M, double gamma, const el &e);
 
-void conjugateGradient(const vector<double> &di, const vector<double> &gg,
-                       const vector<int> &ig, const vector<int> &jg,
-                       const vector<double> &F, vector<double> &q, double eps,
-                       int maxIter); // Conjugate gradient solver
+// // Get local stiffness matrix G
+// void getG(vector<vector<double>> &G, const el &e);
 
-/*========================= F/U FUNCTIONS =========================*/
+// // Get local load vector b
+// void getb(vector<double> &b, const el &e, double gamma, int s, double t,
+//           const vector<double> &q1, const vector<double> &q2, double dt);
 
-// Function f (modify as needed)
-double f(int s, const nd &n, const el &e)
-{
-  switch (s)
-  {
-  case 0:
-    return 0;
-  case 1:
-    return 1;
-  case 2:
-    return n.r - 1 / n.r;
-  case 3:
-    return 10 * n.r + 4 * n.z;
-  case 4:
-    return n.r * n.r - 4;
-  case 5:
-    return n.z * n.z - 2;
-  case 7:
-    return 2 * sin(n.z);
-  default:
-    return 0;
-  }
+/*======================== SPARSE MATRICES FUNCTIONS =======================*/
+
+// Get portrait sparse matrix
+void GetPortraitSparseMatrix(vector<nd> &mesh, vector<el> &elList, SLAE &slae);
+
+// Get global matrix and vector
+void addLocalMatrixToGlobal(SparseMatrix &A, vector<int> &localVertex,
+                            vector<vector<double>> &localMatrix);
+
+void addLocalVectorToGlobal(vector<double> &b, vector<int> &localVertex,
+                            vector<double> &bLocal);
+
+void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem);
+
+void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
+                            vector<double> &result, vector<int> &localNum);
+
+void multiplyMatrixToCoef(vector<vector<double>> &matrix, double coef,
+                          vector<vector<double>> &resultMatrix);
+
+void multiplyVectorToCoef(vector<double> &vector, double coef);
+
+/*============================= SOLVER FUNCTIONS ============================*/
+
+// solver
+void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
+           vector<BoundaryConditions> &conds);
+
+void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
+                              TimeMesh &timemesh, SLAE &slae,
+                              vector<BoundaryConditions> &cond, int ti);
+
+// init q0 q1
+void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
+
+/*============================== F/U FUNCTIONS =============================*/
+
+// add switch!!!!!!!!1
+double uInit(nd &n, double t)
+{ // примерная функция, уточнить
+  return n.r * n.r + n.z * n.z + t * t;
 }
-
-// Function u for boundary conditions
-double u(int s, const nd &n)
+double sigma(nd &n, double t)
 {
-  switch (s)
-  {
-  case 0:
-    return 0;
-  case 1:
-    return 0.1;
-  case 2:
-    return n.r;
-  case 3:
-    return 5 * n.r + 2;
-  case 4:
-    return n.r * n.r;
-  case 5:
-    return n.z * n.z;
-  case 7:
-    return sin(n.z);
-  default:
-    return 0;
-  }
+  // Примерная функция сигмы, нужно уточнить
+  return n.r * n.r + n.z * n.z + t * t;
+}
+double F(nd &n, double t)
+{
+  // Примерная функция, нужно уточнить
+  return n.r * n.r + n.z * n.z + t * t;
 }
