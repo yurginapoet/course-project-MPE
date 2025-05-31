@@ -9,43 +9,6 @@
 #include <vector>
 using namespace std;
 
-typedef std::vector<double> mvec;
-// Vector addition
-inline mvec operator+(mvec &a, const mvec &b)
-{
-  mvec res = a;
-  for (int i = 0; i < a.size(); i++)
-    res[i] += b[i];
-  return res;
-}
-
-// Vector subtraction
-inline mvec operator-(mvec &a, const mvec &b)
-{
-  mvec res = a;
-  for (int i = 0; i < a.size(); i++)
-    res[i] -= b[i];
-  return res;
-}
-
-// Dot product
-inline double operator*(const mvec &a, const mvec &b)
-{
-  double scalar = 0.0;
-  for (int i = 0; i < a.size(); i++)
-    scalar += a[i] * b[i];
-  return scalar;
-}
-
-// Scalar-vector multiplication
-inline mvec operator*(double c, mvec &a)
-{
-  mvec res = a;
-  for (int i = 0; i < a.size(); i++)
-    res[i] *= c;
-  return res;
-}
-
 // структура узла сетки
 struct nd
 {
@@ -66,7 +29,7 @@ struct el
   double lambda;
   nd nds[3];
 };
-
+// structure for time layer?????????????
 struct timelayer
 {
   double t;      // value of current timestep
@@ -74,27 +37,323 @@ struct timelayer
   double coef;   // coefficient of intervals on current time step
 };
 
-// sparse matrix
-struct sparsematrix
+// time mesh
+struct TimeMesh
 {
-  vector<int> ia;    // Индексы строк (начало строк)
-  vector<int> ja;    // Индексы столбцов
-  vector<double> au; // Верхняя часть матрицы (значения на верхней диагонали)
-  vector<double> al; // Нижняя часть матрицы (значения на нижней диагонали)
-  vector<double> di; // Диагональные элементы (если они есть)
-  int n;             // Размерность матрицы
+  vector<double> t{};
+  vector<double> tNew{};
 
-  // Конструктор
-  sparsematrix(int size)
-  {
-    n = size;
-    ia.resize(n + 1, 0);
-    ja.resize(n, 0);
-    au.resize(n, 0.0);
-    al.resize(n, 0.0);
-    di.resize(n, 0.0);
-  }
+  vector<vector<double>> q{};
+  vector<double> qti{};
+  vector<double> qti_1{};
+  vector<double> qti_2{};
+
+  void swap();
+  void saveWeights(int ti);
 };
+
+// time mesh funcs
+void TimeMesh::swap()
+{
+  std::swap(qti_2, qti_1);
+  std::swap(qti_1, qti);
+}
+void TimeMesh::saveWeights(int ti) { q[ti] = qti; }
+
+// sparse matrix structure
+struct SparseMatrix
+{
+  vector<int> ig{}, jg{};
+  vector<double> ggl{}, ggu{}, di{};
+};
+
+// SLAE structure
+struct SLAE
+{
+  SparseMatrix A{};
+  vector<double> q{}, b{};
+};
+
+// LOS structure
+struct LOS
+{
+  vector<double> r1{}, rk{}, z1{}, p1{}, Ar{}, p{}, mult{};
+};
+
+struct BoundaryConditions
+{
+  int type{}, function{};
+  vector<int> VerticesNumbers{};
+};
+
+void GetPortraitSparseMatrix(vector<nd> &mesh, vector<el> &elList, SLAE &slae)
+{
+  auto &nodeCoord = mesh;
+  auto &elements = elList;
+
+  auto &ig = slae.A.ig, &jg = slae.A.jg;
+  auto &b = slae.b;
+
+  vector<std::set<int>> rowCount{};
+
+  const int sizeSlae = nodeCoord.size();
+
+  slae.A.di.resize(sizeSlae);
+  slae.b.resize(sizeSlae);
+  slae.q.resize(sizeSlae);
+  ig.resize(sizeSlae + 1);
+  rowCount.resize(sizeSlae);
+
+  for (auto &elem : elements)
+  {
+    for (auto &i : elem.nds)
+    {
+      for (auto &j : elem.nds)
+        if (j.gl_num < i.gl_num)
+          rowCount[i.gl_num].insert(j.gl_num);
+    }
+  }
+
+  ig[0] = 0;
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    ig[i + 1] = ig[i] + rowCount[i].size();
+    for (auto j : rowCount[i])
+      jg.push_back(j);
+  }
+
+  slae.A.ggl.resize(ig[sizeSlae]);
+  slae.A.ggu.resize(ig[sizeSlae]);
+}
+
+void localOptimalSchemeLU(SLAE &slae, SLAE &LU, LOS &v, int maxIter, double eps)
+{
+  auto &r1 = v.r1, &z1 = v.z1, &p1 = v.p1, &mult = v.mult, &rk = v.rk,
+       &Ar = v.Ar, &p = v.p;
+  auto &q = slae.q;
+  const int n = slae.A.di.size();
+  double normb = 0;
+
+  p.resize(n);
+  r1.resize(n);
+  z1.resize(n);
+  p1.resize(n);
+  mult.resize(n);
+  rk.resize(n);
+  Ar.resize(n);
+
+  calcDiscrepancy(slae, v, q, normb);
+  calcY(LU, r1, r1);
+  calcX(LU, r1, z1);
+  multOfMatrix(slae.A, z1, p1);
+  calcY(LU, p1, p1);
+  double scalarr = scalarMult(r1, r1), discrepancy = sqrt(scalarr / normb);
+
+  for (int k = 1; k < maxIter && discrepancy > eps; k++)
+  {
+    double scalarp = scalarMult(p1, p1), alpha = scalarMult(p1, r1) / scalarp;
+    calcVectorMultCoef(z1, alpha, mult);
+    calcSumVectors(q, v.mult, q);
+    calcVectorMultCoef(p1, -alpha, mult);
+    calcSumVectors(r1, mult, r1);
+
+    calcX(LU, r1, rk);
+    multOfMatrix(slae.A, rk, Ar);
+    calcY(LU, Ar, p);
+    double betta = -scalarMult(p1, p) / scalarp;
+    calcVectorMultCoef(z1, betta, mult);
+    calcSumVectors(rk, mult, z1);
+    calcVectorMultCoef(p1, betta, mult);
+    calcSumVectors(p, mult, p1);
+    discrepancy = sqrt(scalarMult(r1, r1) / scalarr);
+    std::cout << k << " " << discrepancy << std::endl;
+  }
+  normb = 0;
+  calcDiscrepancy(slae, v, q, normb);
+  discrepancy = sqrt(scalarMult(r1, r1) / normb);
+  std::cout << "Final discrepancy: " << discrepancy << std::endl;
+}
+
+void calcLU(SLAE &slae, SLAE &LU)
+{
+  auto &ig = slae.A.ig, &jg = slae.A.jg;
+  auto &ggl = slae.A.ggl, &ggu = slae.A.ggu, &di = slae.A.di, &L = LU.A.ggl,
+       &U = LU.A.ggu, &diL = LU.A.di;
+  LU.b = slae.b;
+  LU.A.ig = ig;
+  LU.A.jg = jg;
+
+  const int sizeSlae = di.size(), sizeTriangles = ig[sizeSlae];
+
+  diL.resize(sizeSlae);
+  L.resize(sizeTriangles);
+  U.resize(sizeTriangles);
+
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    double sumDi = 0;
+    int i0 = ig[i];
+    int i1 = ig[i + 1];
+
+    for (int k = i0; k < i1; k++)
+    {
+      double suml = 0, sumu = 0;
+      int j = jg[k];
+      int j0 = ig[j];
+      int j1 = ig[j + 1];
+
+      for (int ik = i0, kj = j0; ik < i1 && kj < j1;)
+      {
+        if (jg[ik] > jg[kj])
+          kj++;
+        else if (jg[ik] < jg[kj])
+          ik++;
+        else
+        {
+          suml += L[ik] * U[kj];
+          sumu += L[kj] * U[ik];
+          ik++;
+          kj++;
+        }
+      }
+
+      L[k] = (ggl[k] - suml);
+      U[k] = (ggu[k] - sumu) / diL[j];
+      sumDi += L[k] * U[k];
+    }
+    diL[i] = di[i] - sumDi;
+  }
+}
+
+void calcY(SLAE &LU, vector<double> &b, vector<double> &y)
+{
+  auto &ig = LU.A.ig, &jg = LU.A.jg;
+  auto &di = LU.A.di, &L = LU.A.ggl;
+  const int sizeSlae = di.size();
+
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    double sum = 0;
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      sum += L[i0] * y[j];
+    }
+
+    y[i] = (b[i] - sum) / di[i];
+  }
+}
+
+void calcX(SLAE &LU, vector<double> &y, vector<double> &x)
+{
+  auto &ig = LU.A.ig, &jg = LU.A.jg;
+  auto &U = LU.A.ggu;
+  const int sizeSlae = LU.A.di.size();
+  vector<double> v = y;
+
+  for (int i = sizeSlae - 1; i >= 0; i--)
+  {
+    x[i] = v[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      v[j] -= x[i] * U[i0];
+    }
+  }
+}
+
+void multOfMatrix(SparseMatrix &A, vector<double> &x, vector<double> &F)
+{
+  auto &ig = A.ig, &jg = A.jg;
+  auto &di = A.di, &ggl = A.ggl, &ggu = A.ggu;
+  const int sizeA = di.size();
+
+  for (int i = 0; i < sizeA; i++)
+  {
+    F[i] = di[i] * x[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      F[i] += ggl[i0] * x[j];
+      F[j] += ggu[i0] * x[i];
+    }
+  }
+}
+
+void calcDiscrepancy(SLAE &slae, LOS &v, vector<double> &x, double &normb)
+{
+  auto &ig = slae.A.ig, &jg = slae.A.jg;
+  auto &ggl = slae.A.ggl, &ggu = slae.A.ggu, &di = slae.A.di, &b = slae.b,
+       &r1 = v.r1;
+  const int sizeSlae = di.size();
+
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    normb += b[i] * b[i];
+    r1[i] = b[i] - di[i] * x[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      r1[i] -= ggl[i0] * x[j];
+      r1[j] -= ggu[i0] * x[i];
+    }
+  }
+}
+
+void calcVectorMultCoef(vector<double> &a, double coef, vector<double> &res)
+{
+  const int n = a.size();
+
+  for (int i = 0; i < n; i++)
+    res[i] = a[i] * coef;
+}
+
+void calcSumVectors(vector<double> &a, vector<double> &b, vector<double> &res)
+{
+  const int n = a.size();
+
+  for (int i = 0; i < n; i++)
+    res[i] = a[i] + b[i];
+}
+
+double scalarMult(vector<double> &a, vector<double> &b)
+{
+  int n = a.size();
+  double res = 0;
+  for (int i = 0; i < n; i++)
+    res += a[i] * b[i];
+  return res;
+}
+
+void clearSLAE(SLAE &slae)
+{
+  auto &A = slae.A;
+  auto &b = slae.b;
+  auto &q = slae.q;
+
+  const int sizeSLAE = A.di.size();
+  const int countNonZeroElems = A.ig[sizeSLAE];
+
+  for (int i = 0; i < sizeSLAE; i++)
+  {
+    A.di[i] = 0;
+    q[i] = 0;
+    b[i] = 0;
+  }
+
+  for (int i = 0; i < countNonZeroElems; i++)
+  {
+    A.ggl[i] = 0;
+    A.ggu[i] = 0;
+  }
+}
 
 void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum,
            vector<timelayer> &time)
@@ -158,179 +417,219 @@ void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum,
   in.close();
 }
 
-void buildPortrait(vector<el> &elList, vector<nd> &mesh, sparsematrix &matrix)
+void readTimeMesh(TimeMesh &time)
 {
-  vector<vector<int>> list(mesh.size());
-  list[0].push_back(0);
+  int countTimeLayer = 0;
 
-  // Go through all finite elements
-  for (int ielem = 0; ielem < elList.size(); ielem++)
+  ifstream timeMesh("../data/timeMesh.txt");
+
+  timeMesh >> countTimeLayer;
+  time.t.resize(countTimeLayer);
+
+  for (int ti = 0; ti < countTimeLayer; ti++)
+    timeMesh >> time.t[ti];
+
+  timeMesh.close();
+}
+
+void readSplitTimeMesh(TimeMesh &time)
+{
+  auto &tNew = time.tNew;
+
+  const int tSize = time.t.size();
+
+  ifstream splittingTimeMesh("../data/timeMeshSplit.txt");
+
+  int nk = 0;
+  tNew.resize(1, time.t[0]);
+
+  for (int ti = 0, j = 1; ti < tSize - 1; ti++, j++)
   {
-    // Process pairs of nodes in the element
-    for (int i = 0; i < 3; i++) // Each element has 3 nodes
+    int countIntervals = 0;
+
+    double coef = 0;
+    double step = 0;
+
+    splittingTimeMesh >> countIntervals >> coef;
+    nk += countIntervals;
+    tNew.resize(nk + 1);
+
+    if (coef != 1)
     {
-      for (int j = i + 1; j < 3; j++)
-      {
-        // Get global node numbers
-        int node_i = elList[ielem].nds[i].gl_num;
-        int node_j = elList[ielem].nds[j].gl_num;
+      double sumProgression = (pow(coef, countIntervals) - 1.) / (coef - 1.);
+      step = (time.t[ti + 1] - time.t[ti]) / sumProgression;
 
-        // Ensure node_i is smaller than node_j for upper triangle
-        int insertPos = max(node_i, node_j);
-        int element = min(node_i, node_j);
-
-        bool isIn = false;
-
-        // Check if element is already in the list
-        for (int k = 0; k < list[insertPos].size() && !isIn; k++)
-          if (element == list[insertPos][k])
-            isIn = true;
-
-        // If not found, add to the list
-        if (!isIn)
-          list[insertPos].push_back(element);
-      }
+      int jk = 1;
+      for (j; j < nk; j++, jk++)
+        tNew[j] = time.t[ti] + step * (pow(coef, jk) - 1.) / (coef - 1.);
     }
-  }
-
-  // Sort all lists in ascending order
-  for (int i = 0; i < mesh.size(); i++)
-    sort(list[i].begin(), list[i].end());
-
-  // Form the ia array (row pointers)
-  matrix.ia[0] = 0;
-  matrix.ia[1] = 0;
-  for (int i = 1; i < mesh.size(); i++)
-    matrix.ia[i + 1] = matrix.ia[i] + list[i].size();
-
-  // Form the ja array (column indices)
-  matrix.ja.resize(matrix.ia[mesh.size()]);
-  for (int i = 1, j = 0; i < mesh.size(); i++)
-  {
-    for (int k = 0; k < list[i].size(); k++)
-      matrix.ja[j++] = list[i][k];
-  }
-
-  // Resize au, al, and di arrays to match ja
-  matrix.au.resize(matrix.ja.size(), 0.0);
-  matrix.al.resize(matrix.ja.size(), 0.0);
-  matrix.di.resize(matrix.n, 0.0);
-}
-
-void toDense(const sparsematrix &matrix, const string &filename)
-{
-  vector<vector<double>> dense_matrix(matrix.n, vector<double>(matrix.n, 0.0));
-
-  for (int i = 0; i < matrix.n; i++)
-  {
-    dense_matrix[i][i] = matrix.di[i];
-    for (int j = matrix.ia[i]; j < matrix.ia[i + 1]; j++)
+    else
     {
-      dense_matrix[i][matrix.ja[j]] = matrix.au[j];
-      dense_matrix[matrix.ja[j]][i] = matrix.al[j];
+      step = (time.t[ti + 1] - time.t[ti]) / countIntervals;
+
+      int jk = 1;
+      for (j; j < nk; j++, jk++)
+        tNew[j] = time.t[ti] + step * jk;
     }
+
+    tNew[j] = time.t[ti + 1];
   }
 
-  ofstream dense(filename);
-  dense.precision(5);
-  if (dense.is_open())
-  {
-    for (int i = 0; i < matrix.n; i++)
-    {
-      for (int j = 0; j <= i; j++)
-        dense << left << setw(10) << dense_matrix[i][j];
-      dense << endl << endl;
-    }
-  }
+  time.q.resize(time.tNew.size());
 }
 
-// Matrix-vector multiplication
-void mult(const sparsematrix &matrix, const mvec &x, mvec &y)
+// solver
+void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
+           vector<BoundaryConditions> &conds)
 {
-  for (int i = 0; i < y.size(); i++)
-    y[i] = 0;
+  const int tSize = timemesh.tNew.size();
 
-  for (int i = 0; i < matrix.n; i++)
+  getWeightsInitU(timemesh, mesh);
+  timemesh.q[0] = timemesh.qti_2;
+  timemesh.q[1] = timemesh.qti_1;
+
+  for (int ti = 2; ti < tSize; ti++)
   {
-    y[i] = matrix.di[i] * x[i];
-    for (int k = matrix.ia[i]; k < matrix.ia[i + 1]; k++)
-    {
-      int j = matrix.ja[k];
-      y[i] += matrix.au[k] * x[j];
-      y[j] += matrix.al[k] * x[i];
-    }
+    SLAE LU{};
+    LOS vectors{};
+
+    GetGlobalMatrixAndVector(mesh, time, slae, conds, ti);
+
+    calcLU(slae, LU);
+    localOptimalSchemeLU(slae, LU, vectors, 10000, 1e-14);
+
+    timemesh.qti = slae.q;
+    timemesh.saveWeights(ti);
+    timemesh.swap();
+
+    clearSLAE(slae);
   }
 }
-
-// Euclidean norm
-double EuclideanNorm(const mvec &x)
+// init q0 q1
+void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh)
 {
-  double scalar = 0;
-  for (int i = 0; i < x.size(); i++)
-    scalar += x[i] * x[i];
-  return sqrt(scalar);
-}
+  auto &qti = timemesh.qti;
+  auto &qti_1 = timemesh.qti_1;
+  auto &qti_2 = timemesh.qti_2;
 
-// Conjugate gradient method
-void CGM(const sparsematrix &matrix, mvec &q, mvec &F, double eps, int maxIter)
+  const int sizeMatrix = mesh.size();
+
+  qti.resize(sizeMatrix);
+  qti_1.resize(sizeMatrix);
+  qti_2.resize(sizeMatrix);
+
+  for (int i = 0; i < sizeMatrix; i++)
+  {
+    qti_2[i] = uInit(mesh[i], timemesh.tNew[0]);
+    qti_1[i] = uInit(mesh[i], timemesh.tNew[1]);
+  }
+}
+// add switch!!!!!!!!1
+double uInit(nd &n, double t) { return n.r * n.r + n.z * n.z + t * t; }
+
+// boundaries input
+void readBoundaryCondition(vector<BoundaryConditions> &cond)
 {
-  int n = matrix.n;
-  mvec um(n, 0.0), z(n, 0.0), r(n, 0.0);
+  int numEdgeConditions = 0;
 
-  mult(matrix, q, um);
-  r = F - um;
-  z = r;
+  ifstream conditions("../data/boundaryConditions.txt");
+  conditions >> numEdgeConditions;
+  cond.resize(numEdgeConditions);
 
-  double bnorm = EuclideanNorm(F);
-  double residual = EuclideanNorm(r) / bnorm;
-
-  if (residual > eps)
+  for (int i = 0; i < numEdgeConditions; i++)
   {
-    double scal1 = r * r;
-    mult(matrix, z, um);
-    double scal2 = um * z;
-    double alfa = scal1 / scal2;
+    auto &VerticesNumbers = cond[i].VerticesNumbers;
+    int numVertex = 0, type = 0, function = 0;
 
-    q = q + alfa * z;
-    r = r - alfa * um;
+    conditions >> type >> function >> numVertex;
 
-    double scal3 = r * r;
-    double beta = scal3 / scal1;
-    z = r + beta * z;
-    residual = EuclideanNorm(r) / bnorm;
-  }
+    cond[i].type = type;
+    cond[i].function = function - 1;
+    VerticesNumbers.resize(numVertex);
 
-  for (int k = 1; k < maxIter && residual > eps; k++)
-  {
-    double scal1 = r * r;
-    mult(matrix, z, um);
-    double scal2 = um * z;
-    double alfa = scal1 / scal2;
-
-    q = q + alfa * z;
-    r = r - alfa * um;
-
-    double scal3 = r * r;
-    double beta = scal3 / scal1;
-    z = r + beta * z;
-    residual = EuclideanNorm(r) / bnorm;
+    for (int k = 0; k < numVertex; k++)
+      conditions >> VerticesNumbers[k];
   }
 }
 
+void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
+                              TimeMesh &timemesh, SLAE &slae,
+                              vector<BoundaryConditions> &cond, int ti)
+{
+  auto &elements = elList;
+  auto &vertexCoord = mesh;
+
+  auto &A = slae.A;
+  auto &b = slae.b;
+
+  double t = timemesh.tNew[ti];
+  double deltaT = timemesh.tNew[ti] - timemesh.tNew[ti - 2];
+  double deltaT0 = timemesh.tNew[ti] - timemesh.tNew[ti - 1];
+  double deltaT1 = timemesh.tNew[ti - 1] - timemesh.tNew[ti - 2];
+
+  const int sizeSlae = vertexCoord.size();
+
+  vector<vector<double>> M(3), G(3), tempMatrix(3);
+  vector<double> locb(3, 0), tempVector(3, 0);
+
+  // изменяем размер векторов
+  for (int i = 0; i < 3; i++)
+  {
+    M[i].resize(3);
+    G[i].resize(3);
+    tempMatrix[i].resize(3);
+  }
+
+  for (auto &elem : elements)
+  {
+    // НУЖНО ДОБАВИТЬ СИГМУ
+    getSigmaWeights(mesh.vertexCoord, elem, t);
+
+    // ПРОСТО ТУПО ВЫЧИСЛЯЕМ ЛОКАЛЬНЫЕ МАТРИЦЫ И ВЕКТОРЫ
+    getG(elem, G, t);
+    getM(elem, M);
+    getLocalb(vertexCoord, elem, locb, t);
+
+    multiplyMatrixToCoef(M, (deltaT + deltaT0) / (deltaT * deltaT0),
+                         tempMatrix);
+
+    addLocalMatrixToGlobal(A, elem.localVertex, tempMatrix);
+    addLocalMatrixToGlobal(A, elem.localVertex, G);
+
+    addLocalVectorToGlobal(b, elem.localVertex, locb);
+
+    multiplyMatrixToVector(M, timemesh.qti_2, tempVector, elem.localVertex);
+    multiplyVectorToCoef(tempVector, -deltaT0 / (deltaT * deltaT1));
+    addLocalVectorToGlobal(b, elem.localVertex, tempVector);
+
+    multiplyMatrixToVector(M, timemesh.qti_1, tempVector, elem.localVertex);
+    multiplyVectorToCoef(tempVector, deltaT / (deltaT1 * deltaT0));
+    addLocalVectorToGlobal(b, elem.localVertex, tempVector);
+  }
+
+  addSecondBoundaryCondition(slae, cond, vertexCoord, t);
+  addFirstBoundaryCondition(slae, cond, vertexCoord, t);
+}
+
+// Main function
 int main()
 {
-  // initialization
   vector<nd> mesh;
-  vector<timelayer> time;
   vector<el> elList;
+  vector<timelayer> time; // рудимент видимо нужно будет убрать
   double gamma;
   int fnum;
 
-  // input
+  SLAE slae{}, LU{};
+  LOS v{};
+  TimeMesh timemesh{};
+  vector<BoundaryConditions> conds{};
+
   input(mesh, elList, gamma, fnum, time);
-  sparsematrix A(mesh.size());
-  // building portrait
-  buildPortrait(elList, mesh, A);
+  readTimeMesh(timemesh);
+  readSplitTimeMesh(timemesh);
+
+  GetPortraitSparseMatrix(mesh, elList, slae);
 
   return 0;
 }
