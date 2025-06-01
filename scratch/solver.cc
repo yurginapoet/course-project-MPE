@@ -1,12 +1,31 @@
 #include "header.h"
 
+void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh, int flag)
+{
+  auto &qti = timemesh.qti;
+  auto &qti_1 = timemesh.qti_1;
+  auto &qti_2 = timemesh.qti_2;
+
+  const int sizeMatrix = mesh.size();
+
+  qti.resize(sizeMatrix);
+  qti_1.resize(sizeMatrix);
+  qti_2.resize(sizeMatrix);
+
+  for (int i = 0; i < sizeMatrix; i++)
+  {
+    qti_2[i] = uInit(mesh[i], timemesh.tNew[0], flag);
+    qti_1[i] = uInit(mesh[i], timemesh.tNew[1], flag);
+  }
+}
+
 // solver
 void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
-           vector<BoundaryConditions> &conds)
+           vector<BoundaryConditions> &conds, int flag, double sigma)
 {
   int tSize = timemesh.tNew.size();
 
-  getWeightsInitU(timemesh, mesh);
+  getWeightsInitU(timemesh, mesh, flag);
   timemesh.q[0] = timemesh.qti_2;
   timemesh.q[1] = timemesh.qti_1;
 
@@ -15,14 +34,15 @@ void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
     SLAE LU{};
     LOS vectors{};
 
-    GetGlobalMatrixAndVector(mesh, elList, timemesh, slae, conds, ti);
+    GetGlobalMatrixAndVector(mesh, elList, timemesh, slae, conds, ti, flag,
+                             sigma);
 
     calcLU(slae, LU);
     localOptimalSchemeLU(slae, LU, vectors, 10000, 1e-14);
 
     timemesh.qti = slae.q;
-    timemesh.saveWeights(ti);
-    timemesh.swap();
+    timemesh.SaveWeights(ti);
+    timemesh.Swap();
 
     clearSLAE(slae);
   }
@@ -30,7 +50,8 @@ void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
 
 void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
                               TimeMesh &timemesh, SLAE &slae,
-                              vector<BoundaryConditions> &cond, int ti)
+                              vector<BoundaryConditions> &cond, int ti,
+                              int flag, double sigma)
 {
   auto &A = slae.A;
   auto &b = slae.b;
@@ -55,18 +76,17 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
   for (auto &elem : elList)
   {
     // НУЖНО ДОБАВИТЬ СИГМУ
-    getSigmaWeights(mesh, elem, t);
 
     // ПРОСТО ТУПО ВЫЧИСЛЯЕМ ЛОКАЛЬНЫЕ МАТРИЦЫ И ВЕКТОРЫ
     getG(G, elem);
-    getM(M, sigmas, elem);
-    getb(locb, elem, t);
+    getM(M, sigma, elem);
+    getb(locb, elem, t, sigma, flag);
 
     // Умножаем локальные матрицы на коэффициенты
     multiplyMatrixToCoef(M, (deltaT + deltaT0) / (deltaT * deltaT0),
                          tempMatrix);
     // ДОБАВЛЯЕМ ЛОКАЛЬНЫЕ МАТРИЦЫ В ГЛОБАЛЬНУЮ
-    addLocalMatrixToGlobal(A, elem.localVertex, tempMatrix);
+    addLocalMatrixToGlobal(A, elem.nds, tempMatrix);
     addLocalMatrixToGlobal(A, elem.localVertex, G);
     // ДОБАВЛЯЕМ ЛОКАЛЬНЫЙ ВЕКТОР В ГЛОБАЛЬНЫЙ
     addLocalVectorToGlobal(b, elem.localVertex, locb);

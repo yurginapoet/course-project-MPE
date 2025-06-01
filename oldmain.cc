@@ -543,18 +543,6 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond)
   }
 }
 
-void getSigmaWeights(vector<nd> &mesh, el &element, double tValue)
-{
-  auto &localVertex = element.localVertex;
-  auto &sigmaWeights = element.sigmaWeights;
-
-  vector<Point> points = {coords[localVertex[0]], coords[localVertex[1]],
-                          coords[localVertex[2]]};
-
-  for (int i = 0; i < 3; i++)
-    sigmaWeights[i] = sigma(points[i].x, points[i].y, tValue);
-}
-
 void addLocalMatrixToGlobal(SparseMatrix &A, vector<int> &localVertex,
                             vector<vector<double>> &localMatrix)
 {

@@ -222,7 +222,7 @@ double Mij(int i, int j, el e, double det)
 
 // получение локальной матрицы масс M, записывает результат в передаваемую
 // матрицу.
-void getM(vector<vector<double>> &M, double gamma, el e)
+void getM(vector<vector<double>> &M, double sigma, el e)
 {
   double det = detD(e);
   int i, j;

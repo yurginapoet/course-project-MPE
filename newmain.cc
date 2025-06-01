@@ -169,7 +169,7 @@ void getG(vector<vector<double>> &G, const el &e)
 }
 
 // Get local load vector
-void getb(vector<double> &b, const el &e, double gamma, int s, double t,
+void getb(vector<double> &b, const el &e, double sigma, int s, double t,
           const vector<double> &q1, const vector<double> &q2, double dt)
 {
   double det = detD(e);
@@ -180,7 +180,7 @@ void getb(vector<double> &b, const el &e, double gamma, int s, double t,
   }
 
   vector<vector<double>> M(3, vector<double>(3));
-  getM(M, gamma, e);
+  getM(M, sigma, e);
 
   vector<double> q1_loc(3), q2_loc(3);
   for (int i = 0; i < 3; i++)

@@ -92,7 +92,7 @@ void getG(vector<vector<double>> &G, el e)
 
 // получение вектора b, результат записывается в переданный вектор
 // нужно переписать построение локального вектора, потому что там все подругому.
-void getb(vector<double> &b, el e, double gamma, int s)
+void getb(vector<double> &b, el e, double t, double gamma, int flag)
 {
   double sum = 0;
   double det = detD(e);
@@ -100,7 +100,7 @@ void getb(vector<double> &b, el e, double gamma, int s)
   for (int i = 0; i < 3; i++)
   {
     for (long k = 0; k < 3; k++)
-      sum += f(s, e.nds[k], e) * Mij(i, k, e, det);
+      sum += f(e.nds[k], t, flag) * Mij(i, k, e, det);
     b[i] = sum;
     sum = 0;
   }

@@ -85,13 +85,10 @@ struct BoundaryConditions
 
 // Input data
 void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum);
-
 // Read time mesh
 void readTimeMesh(TimeMesh &time);
-
 // Read time steps
 void readSplitTimeMesh(TimeMesh &time);
-
 // boundaries input
 void readBoundaryCondition(vector<BoundaryConditions> &cond);
 
@@ -102,57 +99,56 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond);
 
 // Compute determinant
 double detD(el &e);
-
 // Compute factorial
 long fact(int a);
-
 // Integrate L1*L2*L3
 double intL(int nv[], double det);
-
 // Compute mass matrix element M_ij
 double Mij(int i, int j, el e, double det);
-
 // Get local mass matrix M
 void getM(vector<vector<double>> &M, double gamma, el e);
-
 // Get local stiffness matrix G
 void getG(vector<vector<double>> &G, el e);
-
 // Get local load vector b
-void getb(vector<double> &b, el e, double gamma, int s, double t,
-          const vector<double> &q1, const vector<double> &q2, double dt);
+void getb(vector<double> &b, el e, double t, double gamma, int flag);
 
 /*======================== SPARSE MATRICES FUNCTIONS =======================*/
-
 // Get portrait sparse matrix
 void GetPortraitSparseMatrix(vector<nd> &mesh, vector<el> &elList, SLAE &slae);
-
 // Get global matrix and vector
-void addLocalMatrixToGlobal(SparseMatrix &A, vector<int> &localVertex,
+// проблема с добавлением лок в глобальную чет не так с этим вектором узлов
+void addLocalMatrixToGlobal(SparseMatrix &A, vector<nd> &localVertex,
                             vector<vector<double>> &localMatrix);
-
 void addLocalVectorToGlobal(vector<double> &b, vector<int> &localVertex,
                             vector<double> &bLocal);
-
 void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem);
-
 void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
                             vector<double> &result, vector<int> &localNum);
-
 void multiplyMatrixToCoef(vector<vector<double>> &matrix, double coef,
                           vector<vector<double>> &resultMatrix);
-
 void multiplyVectorToCoef(vector<double> &vector, double coef);
 
-/*============================= SOLVER FUNCTIONS ============================*/
+/*============================== LOS FUNCTIONS ==============================*/
+
+void calcLU(SLAE &slae, SLAE &LU);
+void localOptimalSchemeLU(SLAE &slae, SLAE &LU, LOS &v, int maxIter,
+                          double eps);
+void calcY(SLAE &LU, vector<double> &b, vector<double> &y);
+void calcX(SLAE &LU, vector<double> &y, vector<double> &x);
+void multOfMatrix(SparseMatrix &A, vector<double> &x, vector<double> &F);
+void calcDiscrepancy(SLAE &slae, LOS &v, vector<double> &x, double &normb);
+void clearSLAE(SLAE &slae);
+
+/*============================= SOLVER FUNCTIONS =============================*/
 
 // solver
 void Solve(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh, SLAE &slae,
-           vector<BoundaryConditions> &conds);
+           vector<BoundaryConditions> &conds, int flag, double sigma);
 
 void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
                               TimeMesh &timemesh, SLAE &slae,
-                              vector<BoundaryConditions> &cond, int ti);
+                              vector<BoundaryConditions> &cond, int ti,
+                              int flag, double sigma);
 
 // init q0 q1
 void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
@@ -161,6 +157,7 @@ void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
 
 double f(nd &n, double t, int flag);
 double u(nd &n, double t, int flag);
+double uInit(nd &n, double t, int flag);
 
 // // add switch!!!!!!!!1
 // double uInit(nd &n, double t)

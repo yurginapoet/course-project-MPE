@@ -247,10 +247,10 @@ void clearSLAE(SLAE &slae)
 }
 
 /*======================= MATRIX & VECTOR OPERATIONS =========================*/
-void addLocalMatrixToGlobal(SparseMatrix &A, vector<int> &localVertex,
+void addLocalMatrixToGlobal(SparseMatrix &A, vector<nd> &localVertex,
                             vector<vector<double>> &localMatrix)
 {
-  const int sizeLocal = 6;
+  const int sizeLocal = 3;
 
   for (int i = 0; i < sizeLocal; i++)
     for (int j = 0; j < sizeLocal; j++)
