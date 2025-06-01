@@ -1,0 +1,109 @@
+Applying Boundary Conditions at t = 0.5000000000
+Boundary condition: type = 1, function = 0, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 0.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 0.0000000000
+Vector b after boundary conditions:
+b[0] = 0.0000000000
+b[1] = 0.0000000000
+b[2] = 0.0000000000
+b[3] = 0.0000000000
+
+Applying Boundary Conditions at t = 0.5000000000
+Boundary condition: type = 1, function = 0, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 0.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 0.0000000000
+Vector b after boundary conditions:
+b[0] = 0.0000000000
+b[1] = 0.0000000000
+b[2] = 0.0000000000
+b[3] = 0.0000000000
+
+Applying Boundary Conditions at t = 0.7500000000
+Boundary condition: type = 1, function = 0, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 0.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 0.0000000000
+Vector b after boundary conditions:
+b[0] = 0.0000000000
+b[1] = 0.0000000000
+b[2] = 0.0000000000
+b[3] = 0.0000000000
+
+Applying Boundary Conditions at t = 1.0000000000
+Boundary condition: type = 1, function = 0, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 0.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 0.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 0.0000000000
+Vector b after boundary conditions:
+b[0] = 0.0000000000
+b[1] = 0.0000000000
+b[2] = 0.0000000000
+b[3] = 0.0000000000
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.8333333333
+b[1] = 17.1666666667
+b[2] = 9.5000000000
+b[3] = 13.5000000000
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+[WARNING] All nodes are boundary nodes! This may zero out vector b.
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.0833333333
+b[1] = 18.4166666667
+b[2] = 10.2500000000
+b[3] = 14.2500000000
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+[WARNING] All nodes are boundary nodes! This may zero out vector b.
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.3333333333
+b[1] = 19.6666666667
+b[2] = 11.0000000000
+b[3] = 15.0000000000
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+[WARNING] All nodes are boundary nodes! This may zero out vector b.
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+

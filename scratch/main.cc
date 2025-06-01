@@ -21,7 +21,8 @@ int main()
 
   GetPortraitSparseMatrix(mesh, elList, slae);
 
-  Solve(mesh, elList, timemesh, slae, conds, flag, sigma);
+  // Solve(mesh, elList, timemesh, slae, conds, flag, sigma);
+  DebugSolver(mesh, elList, timemesh, slae, conds, flag, sigma);
 
   PrintSolution(timemesh, mesh);
 

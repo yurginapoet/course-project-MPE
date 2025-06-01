@@ -163,6 +163,10 @@ void stringMatrixInNull(SparseMatrix &A, int i);
 double f(nd &n, double t, int flag);
 double u(nd &n, double t, int flag);
 double uInit(nd &n, double t, int flag);
+void DebugSolver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
+                 SLAE &slae, vector<BoundaryConditions> &conds, int flag,
+                 double sigma);
+// void PrintAllInfo(const SLAE &slae, const TimeMesh &tm, const LOS &los);
 
 // // add switch!!!!!!!!1
 // double uInit(nd &n, double t)
