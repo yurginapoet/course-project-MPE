@@ -247,26 +247,27 @@ void clearSLAE(SLAE &slae)
 }
 
 /*======================= MATRIX & VECTOR OPERATIONS =========================*/
-void addLocalMatrixToGlobal(SparseMatrix &A, vector<nd> &localVertex,
+void addLocalMatrixToGlobal(SparseMatrix &A, el elem,
                             vector<vector<double>> &localMatrix)
 {
   const int sizeLocal = 3;
+  auto locV = elem.nds;
 
   for (int i = 0; i < sizeLocal; i++)
     for (int j = 0; j < sizeLocal; j++)
     {
       double elem = localMatrix[i][j];
-      addElemToGlobalMatrix(A, localVertex[i], localVertex[j], elem);
+      addElemToGlobalMatrix(A, locV[i].gl_num, locV[j].gl_num, elem);
     }
 }
 
-void addLocalVectorToGlobal(vector<double> &b, vector<int> &localVertex,
-                            vector<double> &bLocal)
+void addLocalVectorToGlobal(vector<double> &b, el &elem, vector<double> &bLocal)
 {
   const int sizeLocal = bLocal.size();
+  auto locV = elem.nds;
 
   for (int i = 0; i < sizeLocal; i++)
-    b[localVertex[i]] += bLocal[i];
+    b[locV[i].gl_num] += bLocal[i];
 }
 
 void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem)
@@ -305,16 +306,17 @@ void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem)
 }
 
 void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
-                            vector<double> &result, vector<int> &localNum)
+                            vector<double> &result, el &elem)
 {
   const int sizeMatrix = matrix.size();
+  auto locV = elem.nds;
 
   for (int i = 0; i < sizeMatrix; i++)
   {
     double sum = 0;
 
     for (int j = 0; j < sizeMatrix; j++)
-      sum += matrix[i][j] * vec[localNum[j]];
+      sum += matrix[i][j] * vec[locV[j].gl_num];
 
     result[i] = sum;
   }

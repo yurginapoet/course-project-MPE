@@ -86,20 +86,21 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
     multiplyMatrixToCoef(M, (deltaT + deltaT0) / (deltaT * deltaT0),
                          tempMatrix);
     // ДОБАВЛЯЕМ ЛОКАЛЬНЫЕ МАТРИЦЫ В ГЛОБАЛЬНУЮ
-    addLocalMatrixToGlobal(A, elem.nds, tempMatrix);
-    addLocalMatrixToGlobal(A, elem.localVertex, G);
+    addLocalMatrixToGlobal(A, elem, tempMatrix);
+    addLocalMatrixToGlobal(A, elem, G);
+
     // ДОБАВЛЯЕМ ЛОКАЛЬНЫЙ ВЕКТОР В ГЛОБАЛЬНЫЙ
-    addLocalVectorToGlobal(b, elem.localVertex, locb);
+    addLocalVectorToGlobal(b, elem, locb);
 
-    multiplyMatrixToVector(M, timemesh.qti_2, tempVector, elem.localVertex);
+    multiplyMatrixToVector(M, timemesh.qti_2, tempVector, elem);
     multiplyVectorToCoef(tempVector, -deltaT0 / (deltaT * deltaT1));
-    addLocalVectorToGlobal(b, elem.localVertex, tempVector);
+    addLocalVectorToGlobal(b, elem, tempVector);
 
-    multiplyMatrixToVector(M, timemesh.qti_1, tempVector, elem.localVertex);
+    multiplyMatrixToVector(M, timemesh.qti_1, tempVector, elem);
     multiplyVectorToCoef(tempVector, deltaT / (deltaT1 * deltaT0));
-    addLocalVectorToGlobal(b, elem.localVertex, tempVector);
+    addLocalVectorToGlobal(b, elem, tempVector);
   }
 
-  addSecondBoundaryCondition(slae, cond, vertexCoord, t);
+  // addSecondBoundaryCondition(slae, cond, vertexCoord, t);
   addFirstBoundaryCondition(slae, cond, vertexCoord, t);
 }

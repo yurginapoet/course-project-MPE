@@ -117,13 +117,13 @@ void getb(vector<double> &b, el e, double t, double gamma, int flag);
 void GetPortraitSparseMatrix(vector<nd> &mesh, vector<el> &elList, SLAE &slae);
 // Get global matrix and vector
 // проблема с добавлением лок в глобальную чет не так с этим вектором узлов
-void addLocalMatrixToGlobal(SparseMatrix &A, vector<nd> &localVertex,
+void addLocalMatrixToGlobal(SparseMatrix &A, el elem,
                             vector<vector<double>> &localMatrix);
-void addLocalVectorToGlobal(vector<double> &b, vector<int> &localVertex,
+void addLocalVectorToGlobal(vector<double> &b, el &elem,
                             vector<double> &bLocal);
 void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem);
 void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
-                            vector<double> &result, vector<int> &localNum);
+                            vector<double> &result, el &elem);
 void multiplyMatrixToCoef(vector<vector<double>> &matrix, double coef,
                           vector<vector<double>> &resultMatrix);
 void multiplyVectorToCoef(vector<double> &vector, double coef);
