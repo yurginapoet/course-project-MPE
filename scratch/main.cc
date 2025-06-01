@@ -6,7 +6,6 @@ int main()
   vector<nd> mesh;
   vector<el> elList;
   double sigma;
-  int fnum;
 
   int flag = 1;
 
@@ -15,7 +14,7 @@ int main()
   TimeMesh timemesh{};
   vector<BoundaryConditions> conds{};
 
-  input(mesh, elList, sigma, fnum);
+  input(mesh, elList, sigma, flag);
   readTimeMesh(timemesh);
   readSplitTimeMesh(timemesh);
   readBoundaryCondition(conds);

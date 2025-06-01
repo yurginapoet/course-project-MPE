@@ -153,6 +153,11 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
 // init q0 q1
 void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
 
+void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
+                               vector<nd> mesh, double tValue, int flag);
+
+void stringMatrixInNull(SparseMatrix &A, int i);
+
 /*============================== F/U FUNCTIONS =============================*/
 
 double f(nd &n, double t, int flag);

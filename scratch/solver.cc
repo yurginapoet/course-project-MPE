@@ -102,5 +102,48 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
   }
 
   // addSecondBoundaryCondition(slae, cond, vertexCoord, t);
-  addFirstBoundaryCondition(slae, cond, vertexCoord, t);
+  addFirstBoundaryCondition(slae, cond, mesh, t, flag);
+}
+
+void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
+                               vector<nd> mesh, double tValue, int flag)
+{
+  auto &A = slae.A;
+  auto &b = slae.b;
+
+  for (auto &condition : cond)
+    if (condition.type == 1)
+    {
+      auto &VerticesNumbers = condition.VerticesNumbers;
+      int function = condition.function;
+
+      const int numVertex = VerticesNumbers.size();
+
+      for (int i = 0; i < numVertex; i++)
+      {
+        int globalNum = VerticesNumbers[i];
+        stringMatrixInNull(A, globalNum);
+        b[globalNum] = u(mesh[globalNum], tValue, flag);
+      }
+    }
+}
+
+void stringMatrixInNull(SparseMatrix &A, int i)
+{
+  auto &ig = A.ig, &jg = A.jg;
+  auto &ggl = A.ggl, &ggu = A.ggu, &di = A.di;
+  const int size = ig[di.size()];
+
+  int i0 = ig[i], i1 = ig[i + 1];
+
+  for (i0; i0 < i1; i0++)
+    ggl[i0] = 0.;
+
+  int j0 = i1;
+
+  for (j0; j0 < size; j0++)
+    if (jg[j0] == i)
+      ggu[j0] = 0.;
+
+  di[i] = 1.;
 }
