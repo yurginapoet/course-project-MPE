@@ -1,6 +1,6 @@
 #include "header.h"
 
-void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum)
+void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum)
 {
   int n, k, node;
   double r, z, l;
@@ -32,13 +32,15 @@ void input(vector<nd> &mesh, vector<el> &elList, double &gamma, int &fnum)
 
   // Read lambda
   in.open("../data/lambda.txt");
+  int lambda;
+  in >> lambda;
   for (int i = 0; i < n; i++)
-    in >> elList[i].lambda;
+    elList[i].lambda = lambda;
   in.close();
 
   // Read sigma
-  in.open("../data/gamma.txt");
-  in >> gamma;
+  in.open("../data/sigma.txt");
+  in >> sigma;
   in.close();
 
   // Read fnum
@@ -129,5 +131,24 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond)
 
     for (int k = 0; k < numVertex; k++)
       conditions >> VerticesNumbers[k];
+  }
+}
+
+void PrintSolution(const TimeMesh &timemesh, const vector<nd> &mesh)
+{
+  int timeLayers = timemesh.q.size();
+  int numNodes = mesh.size();
+
+  for (int ti = 0; ti < timeLayers; ++ti)
+  {
+    cout << "=== Time step " << ti << ", t = " << timemesh.tNew[ti] << " ===\n";
+
+    for (int i = 0; i < numNodes; ++i)
+    {
+      cout << "Node " << i << " (r = " << mesh[i].r << ", z = " << mesh[i].z
+           << "): " << timemesh.q[ti][i] << '\n';
+    }
+
+    cout << '\n';
   }
 }

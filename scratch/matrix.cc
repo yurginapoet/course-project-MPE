@@ -1,5 +1,229 @@
 #include "header.h"
 
+/*======================= MATRIX & VECTOR OPERATIONS =========================*/
+void addLocalMatrixToGlobal(SparseMatrix &A, el elem,
+                            vector<vector<double>> &localMatrix)
+{
+  const int sizeLocal = 3;
+  auto locV = elem.nds;
+
+  for (int i = 0; i < sizeLocal; i++)
+    for (int j = 0; j < sizeLocal; j++)
+    {
+      double elem = localMatrix[i][j];
+      addElemToGlobalMatrix(A, locV[i].gl_num, locV[j].gl_num, elem);
+    }
+}
+
+void addLocalVectorToGlobal(vector<double> &b, el &elem, vector<double> &bLocal)
+{
+  const int sizeLocal = bLocal.size();
+  auto locV = elem.nds;
+
+  for (int i = 0; i < sizeLocal; i++)
+    b[locV[i].gl_num] += bLocal[i];
+}
+
+void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem)
+{
+  auto &ig = A.ig, &jg = A.jg;
+  auto &ggl = A.ggl, &ggu = A.ggu, &di = A.di;
+
+  if (i == j)
+    di[i] += elem;
+  else if (i > j)
+  {
+    int beg = ig[i], end = ig[i + 1] - 1;
+    while (jg[beg] != j)
+    {
+      int ind = (beg + end) / 2;
+      if (jg[ind] < j)
+        beg = ind + 1;
+      else
+        end = ind;
+    }
+    ggl[beg] += elem;
+  }
+  else
+  {
+    int beg = ig[j], end = ig[j + 1] - 1;
+    while (jg[beg] != i)
+    {
+      int ind = (beg + end) / 2;
+      if (jg[ind] < i)
+        beg = ind + 1;
+      else
+        end = ind;
+    }
+    ggu[beg] += elem;
+  }
+}
+
+void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
+                            vector<double> &result, el &elem)
+{
+  const int sizeMatrix = matrix.size();
+  auto locV = elem.nds;
+
+  for (int i = 0; i < sizeMatrix; i++)
+  {
+    double sum = 0;
+
+    for (int j = 0; j < sizeMatrix; j++)
+      sum += matrix[i][j] * vec[locV[j].gl_num];
+
+    result[i] = sum;
+  }
+}
+
+void multiplyMatrixToCoef(vector<vector<double>> &matrix, double coef,
+                          vector<vector<double>> &resultMatrix)
+{
+  const int sizeMatrix = matrix.size();
+
+  for (int i = 0; i < sizeMatrix; i++)
+    for (int j = 0; j < sizeMatrix; j++)
+      resultMatrix[i][j] = coef * matrix[i][j];
+}
+
+void multiplyVectorToCoef(vector<double> &vector, double coef)
+{
+  const int size = vector.size();
+
+  for (int i = 0; i < size; i++)
+    vector[i] *= coef;
+}
+
+void calcSumVectors(vector<double> &a, vector<double> &b, vector<double> &res)
+{
+  const int n = a.size();
+
+  for (int i = 0; i < n; i++)
+    res[i] = a[i] + b[i];
+}
+
+double scalarMult(vector<double> &a, vector<double> &b)
+{
+  int n = a.size();
+  double res = 0;
+  for (int i = 0; i < n; i++)
+    res += a[i] * b[i];
+  return res;
+}
+
+void calcVectorMultCoef(vector<double> &a, double coef, vector<double> &res)
+{
+  const int n = a.size();
+
+  for (int i = 0; i < n; i++)
+    res[i] = a[i] * coef;
+}
+
+void calcY(SLAE &LU, vector<double> &b, vector<double> &y)
+{
+  auto &ig = LU.A.ig, &jg = LU.A.jg;
+  auto &di = LU.A.di, &L = LU.A.ggl;
+  const int sizeSlae = di.size();
+
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    double sum = 0;
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      sum += L[i0] * y[j];
+    }
+
+    y[i] = (b[i] - sum) / di[i];
+  }
+}
+
+void calcX(SLAE &LU, vector<double> &y, vector<double> &x)
+{
+  auto &ig = LU.A.ig, &jg = LU.A.jg;
+  auto &U = LU.A.ggu;
+  const int sizeSlae = LU.A.di.size();
+  vector<double> v = y;
+
+  for (int i = sizeSlae - 1; i >= 0; i--)
+  {
+    x[i] = v[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      v[j] -= x[i] * U[i0];
+    }
+  }
+}
+
+void multOfMatrix(SparseMatrix &A, vector<double> &x, vector<double> &F)
+{
+  auto &ig = A.ig, &jg = A.jg;
+  auto &di = A.di, &ggl = A.ggl, &ggu = A.ggu;
+  const int sizeA = di.size();
+
+  for (int i = 0; i < sizeA; i++)
+  {
+    F[i] = di[i] * x[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      F[i] += ggl[i0] * x[j];
+      F[j] += ggu[i0] * x[i];
+    }
+  }
+}
+
+void calcDiscrepancy(SLAE &slae, LOS &v, vector<double> &x, double &normb)
+{
+  auto &ig = slae.A.ig, &jg = slae.A.jg;
+  auto &ggl = slae.A.ggl, &ggu = slae.A.ggu, &di = slae.A.di, &b = slae.b,
+       &r1 = v.r1;
+  const int sizeSlae = di.size();
+
+  for (int i = 0; i < sizeSlae; i++)
+  {
+    normb += b[i] * b[i];
+    r1[i] = b[i] - di[i] * x[i];
+    int i0 = ig[i], i1 = ig[i + 1];
+    for (i0; i0 < i1; i0++)
+    {
+      int j = jg[i0];
+      r1[i] -= ggl[i0] * x[j];
+      r1[j] -= ggu[i0] * x[i];
+    }
+  }
+}
+
+void clearSLAE(SLAE &slae)
+{
+  auto &A = slae.A;
+  auto &b = slae.b;
+  auto &q = slae.q;
+
+  const int sizeSLAE = A.di.size();
+  const int countNonZeroElems = A.ig[sizeSLAE];
+
+  for (int i = 0; i < sizeSLAE; i++)
+  {
+    A.di[i] = 0;
+    q[i] = 0;
+    b[i] = 0;
+  }
+
+  for (int i = 0; i < countNonZeroElems; i++)
+  {
+    A.ggl[i] = 0;
+    A.ggu[i] = 0;
+  }
+}
+
 void GetPortraitSparseMatrix(vector<nd> &mesh, vector<el> &elList, SLAE &slae)
 {
   auto &nodeCoord = mesh;
@@ -139,228 +363,4 @@ void calcLU(SLAE &slae, SLAE &LU)
     }
     diL[i] = di[i] - sumDi;
   }
-}
-
-void calcY(SLAE &LU, vector<double> &b, vector<double> &y)
-{
-  auto &ig = LU.A.ig, &jg = LU.A.jg;
-  auto &di = LU.A.di, &L = LU.A.ggl;
-  const int sizeSlae = di.size();
-
-  for (int i = 0; i < sizeSlae; i++)
-  {
-    double sum = 0;
-    int i0 = ig[i], i1 = ig[i + 1];
-
-    for (i0; i0 < i1; i0++)
-    {
-      int j = jg[i0];
-      sum += L[i0] * y[j];
-    }
-
-    y[i] = (b[i] - sum) / di[i];
-  }
-}
-
-void calcX(SLAE &LU, vector<double> &y, vector<double> &x)
-{
-  auto &ig = LU.A.ig, &jg = LU.A.jg;
-  auto &U = LU.A.ggu;
-  const int sizeSlae = LU.A.di.size();
-  vector<double> v = y;
-
-  for (int i = sizeSlae - 1; i >= 0; i--)
-  {
-    x[i] = v[i];
-    int i0 = ig[i], i1 = ig[i + 1];
-
-    for (i0; i0 < i1; i0++)
-    {
-      int j = jg[i0];
-      v[j] -= x[i] * U[i0];
-    }
-  }
-}
-
-void multOfMatrix(SparseMatrix &A, vector<double> &x, vector<double> &F)
-{
-  auto &ig = A.ig, &jg = A.jg;
-  auto &di = A.di, &ggl = A.ggl, &ggu = A.ggu;
-  const int sizeA = di.size();
-
-  for (int i = 0; i < sizeA; i++)
-  {
-    F[i] = di[i] * x[i];
-    int i0 = ig[i], i1 = ig[i + 1];
-
-    for (i0; i0 < i1; i0++)
-    {
-      int j = jg[i0];
-      F[i] += ggl[i0] * x[j];
-      F[j] += ggu[i0] * x[i];
-    }
-  }
-}
-
-void calcDiscrepancy(SLAE &slae, LOS &v, vector<double> &x, double &normb)
-{
-  auto &ig = slae.A.ig, &jg = slae.A.jg;
-  auto &ggl = slae.A.ggl, &ggu = slae.A.ggu, &di = slae.A.di, &b = slae.b,
-       &r1 = v.r1;
-  const int sizeSlae = di.size();
-
-  for (int i = 0; i < sizeSlae; i++)
-  {
-    normb += b[i] * b[i];
-    r1[i] = b[i] - di[i] * x[i];
-    int i0 = ig[i], i1 = ig[i + 1];
-    for (i0; i0 < i1; i0++)
-    {
-      int j = jg[i0];
-      r1[i] -= ggl[i0] * x[j];
-      r1[j] -= ggu[i0] * x[i];
-    }
-  }
-}
-
-void clearSLAE(SLAE &slae)
-{
-  auto &A = slae.A;
-  auto &b = slae.b;
-  auto &q = slae.q;
-
-  const int sizeSLAE = A.di.size();
-  const int countNonZeroElems = A.ig[sizeSLAE];
-
-  for (int i = 0; i < sizeSLAE; i++)
-  {
-    A.di[i] = 0;
-    q[i] = 0;
-    b[i] = 0;
-  }
-
-  for (int i = 0; i < countNonZeroElems; i++)
-  {
-    A.ggl[i] = 0;
-    A.ggu[i] = 0;
-  }
-}
-
-/*======================= MATRIX & VECTOR OPERATIONS =========================*/
-void addLocalMatrixToGlobal(SparseMatrix &A, el elem,
-                            vector<vector<double>> &localMatrix)
-{
-  const int sizeLocal = 3;
-  auto locV = elem.nds;
-
-  for (int i = 0; i < sizeLocal; i++)
-    for (int j = 0; j < sizeLocal; j++)
-    {
-      double elem = localMatrix[i][j];
-      addElemToGlobalMatrix(A, locV[i].gl_num, locV[j].gl_num, elem);
-    }
-}
-
-void addLocalVectorToGlobal(vector<double> &b, el &elem, vector<double> &bLocal)
-{
-  const int sizeLocal = bLocal.size();
-  auto locV = elem.nds;
-
-  for (int i = 0; i < sizeLocal; i++)
-    b[locV[i].gl_num] += bLocal[i];
-}
-
-void addElemToGlobalMatrix(SparseMatrix &A, int i, int j, double elem)
-{
-  auto &ig = A.ig, &jg = A.jg;
-  auto &ggl = A.ggl, &ggu = A.ggu, &di = A.di;
-
-  if (i == j)
-    di[i] += elem;
-  else if (i > j)
-  {
-    int beg = ig[i], end = ig[i + 1] - 1;
-    while (jg[beg] != j)
-    {
-      int ind = (beg + end) / 2;
-      if (jg[ind] < j)
-        beg = ind + 1;
-      else
-        end = ind;
-    }
-    ggl[beg] += elem;
-  }
-  else
-  {
-    int beg = ig[j], end = ig[j + 1] - 1;
-    while (jg[beg] != i)
-    {
-      int ind = (beg + end) / 2;
-      if (jg[ind] < i)
-        beg = ind + 1;
-      else
-        end = ind;
-    }
-    ggu[beg] += elem;
-  }
-}
-
-void multiplyMatrixToVector(vector<vector<double>> &matrix, vector<double> &vec,
-                            vector<double> &result, el &elem)
-{
-  const int sizeMatrix = matrix.size();
-  auto locV = elem.nds;
-
-  for (int i = 0; i < sizeMatrix; i++)
-  {
-    double sum = 0;
-
-    for (int j = 0; j < sizeMatrix; j++)
-      sum += matrix[i][j] * vec[locV[j].gl_num];
-
-    result[i] = sum;
-  }
-}
-
-void multiplyMatrixToCoef(vector<vector<double>> &matrix, double coef,
-                          vector<vector<double>> &resultMatrix)
-{
-  const int sizeMatrix = matrix.size();
-
-  for (int i = 0; i < sizeMatrix; i++)
-    for (int j = 0; j < sizeMatrix; j++)
-      resultMatrix[i][j] = coef * matrix[i][j];
-}
-
-void multiplyVectorToCoef(vector<double> &vector, double coef)
-{
-  const int size = vector.size();
-
-  for (int i = 0; i < size; i++)
-    vector[i] *= coef;
-}
-
-void calcSumVectors(vector<double> &a, vector<double> &b, vector<double> &res)
-{
-  const int n = a.size();
-
-  for (int i = 0; i < n; i++)
-    res[i] = a[i] + b[i];
-}
-
-double scalarMult(vector<double> &a, vector<double> &b)
-{
-  int n = a.size();
-  double res = 0;
-  for (int i = 0; i < n; i++)
-    res += a[i] * b[i];
-  return res;
-}
-
-void calcVectorMultCoef(vector<double> &a, double coef, vector<double> &res)
-{
-  const int n = a.size();
-
-  for (int i = 0; i < n; i++)
-    res[i] = a[i] * coef;
 }

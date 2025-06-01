@@ -102,11 +102,11 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
   }
 
   // addSecondBoundaryCondition(slae, cond, vertexCoord, t);
-  addFirstBoundaryCondition(slae, cond, mesh, t, flag);
+  addFirstBoundaryCondition(slae, cond, mesh, t);
 }
 
 void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
-                               vector<nd> mesh, double tValue, int flag)
+                               vector<nd> mesh, double tValue)
 {
   auto &A = slae.A;
   auto &b = slae.b;
@@ -115,7 +115,7 @@ void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
     if (condition.type == 1)
     {
       auto &VerticesNumbers = condition.VerticesNumbers;
-      int function = condition.function;
+      int flag = condition.function;
 
       const int numVertex = VerticesNumbers.size();
 

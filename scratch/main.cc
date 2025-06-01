@@ -23,5 +23,7 @@ int main()
 
   Solve(mesh, elList, timemesh, slae, conds, flag, sigma);
 
+  PrintSolution(timemesh, mesh);
+
   return 0;
 }

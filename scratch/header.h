@@ -92,10 +92,13 @@ void readSplitTimeMesh(TimeMesh &time);
 // boundaries input
 void readBoundaryCondition(vector<BoundaryConditions> &cond);
 
+void PrintSolution(const TimeMesh &timemesh, const vector<nd> &mesh);
+
 // Output results
 // void output(const vector<double> &q, const vector<nd> &mesh, double t);
 
-/*========================= LOCAL MATRICES FUNCTIONS ========================*/
+/*========================= LOCAL MATRICES FUNCTIONS
+   ========================*/
 
 // Compute determinant
 double detD(el &e);
@@ -154,7 +157,7 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
 void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
 
 void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
-                               vector<nd> mesh, double tValue, int flag);
+                               vector<nd> mesh, double tValue);
 
 void stringMatrixInNull(SparseMatrix &A, int i);
 
