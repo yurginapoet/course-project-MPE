@@ -42,17 +42,15 @@ struct TimeMesh
   vector<double> qti_1{};
   vector<double> qti_2{};
 
-  void Swap();
-  void SaveWeights(int ti);
+  void Swap()
+  {
+    std::swap(qti_2, qti_1);
+    std::swap(qti_1, qti);
+  };
+  void SaveWeights(int ti) { q[ti] = qti; };
 };
 
 // time mesh funcs
-void TimeMesh::Swap()
-{
-  std::swap(qti_2, qti_1);
-  std::swap(qti_1, qti);
-}
-void TimeMesh::SaveWeights(int ti) { q[ti] = qti; }
 
 // sparse matrix structure
 struct SparseMatrix
@@ -97,8 +95,7 @@ void PrintSolution(const TimeMesh &timemesh, const vector<nd> &mesh);
 // Output results
 // void output(const vector<double> &q, const vector<nd> &mesh, double t);
 
-/*========================= LOCAL MATRICES FUNCTIONS
-   ========================*/
+/*========================= LOCAL MATRICES FUNCTIONS =======================*/
 
 // Compute determinant
 double detD(el &e);
@@ -109,7 +106,7 @@ double intL(int nv[], double det);
 // Compute mass matrix element M_ij
 double Mij(int i, int j, el e, double det);
 // Get local mass matrix M
-void getM(vector<vector<double>> &M, double gamma, el e);
+void getM(vector<vector<double>> &M, double sigma, el &e);
 // Get local stiffness matrix G
 void getG(vector<vector<double>> &G, el e);
 // Get local load vector b

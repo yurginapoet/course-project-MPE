@@ -57,14 +57,14 @@ double Mij(int i, int j, el e, double det)
 
 // получение локальной матрицы масс M, записывает результат в передаваемую
 // матрицу.
-void getM(vector<vector<double>> &M, vector<double> sigma, el e)
+void getM(vector<vector<double>> &M, double sigma, el &e)
 {
   double det = detD(e);
   int i, j;
 
   for (i = 0; i < 3; i++)
     for (int j = 0; j < 3; j++)
-      M[i][j] = sigma[j] * Mij(i, j, e, det);
+      M[i][j] = sigma * Mij(i, j, e, det);
   // ???? точно ли тут должна быть сигма?
 }
 
