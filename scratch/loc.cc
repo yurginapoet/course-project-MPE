@@ -82,15 +82,11 @@ void getG(vector<vector<double>> &G, el e)
   a2[1] = (e.nds[0].r - e.nds[2].r); // r1 - r3
   a2[2] = (e.nds[1].r - e.nds[0].r); // r2 - r1
 
-  // det = (detD(e) * e.lambda) * (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 12;
-
-  double r1r2r3 = (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 9;
-  det = (detD(e) * e.lambda) * r1r2r3 / 6;
+  det = (detD(e) * e.lambda) * (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 12;
 
   for (int i = 0; i < 3; i++)
   {
     for (int j = 0; j < 3; j++)
-      // G[i][j] = det * (a1[i] * a1[j] + a2[i] * a2[j]);
       G[i][j] = det * (a1[i] * a1[j] + a2[i] * a2[j]);
   }
 }
