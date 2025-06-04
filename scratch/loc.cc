@@ -70,6 +70,7 @@ void getM(vector<vector<double>> &M, double sigma, el &e)
 
 // получение локальной матрицы жесткости G, записывает результат в переданную
 // матрицу
+// что-то не так
 void getG(vector<vector<double>> &G, el e)
 {
   vector<double> a1(3), a2(3);
@@ -81,17 +82,22 @@ void getG(vector<vector<double>> &G, el e)
   a2[1] = (e.nds[0].r - e.nds[2].r); // r1 - r3
   a2[2] = (e.nds[1].r - e.nds[0].r); // r2 - r1
 
-  det = (detD(e) * e.lambda) * (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 12;
+  // det = (detD(e) * e.lambda) * (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 12;
+
+  double r1r2r3 = (e.nds[0].r + e.nds[1].r + e.nds[2].r) / 9;
+  det = (detD(e) * e.lambda) * r1r2r3 / 6;
 
   for (int i = 0; i < 3; i++)
   {
     for (int j = 0; j < 3; j++)
+      // G[i][j] = det * (a1[i] * a1[j] + a2[i] * a2[j]);
       G[i][j] = det * (a1[i] * a1[j] + a2[i] * a2[j]);
   }
 }
 
 // получение вектора b, результат записывается в переданный вектор
-// нужно переписать построение локального вектора, потому что там все подругому.
+// нужно переписать построение локального вектора, потому что там все
+// по-другому??.
 void getb(vector<double> &b, el e, double t, double gamma, int flag)
 {
   double sum = 0;

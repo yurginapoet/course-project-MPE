@@ -167,3 +167,723 @@ b[2] = 3.0000000000
 b[3] = 7.0000000000
 b[4] = 15.8251851852
 
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.2100000000
+b[1] = 11.7455555556
+b[2] = 3.4100000000
+b[3] = 14.5455555556
+b[4] = 14.7777777778
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 14.7777777778
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.4671111111
+b[1] = 12.5121481481
+b[2] = 3.6671111111
+b[3] = 15.3121481481
+b[4] = 15.8251851852
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 15.8251851852
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.3794117647
+b[1] = 12.1408496732
+b[2] = 3.5794117647
+b[3] = 14.9408496732
+b[4] = 15.9071895425
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 15.9071895425
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.5271434064
+b[1] = 12.6522235038
+b[2] = 3.7271434064
+b[3] = 15.4522235038
+b[4] = 16.2254004870
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 16.2254004870
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.2100000000
+b[1] = 11.7455555556
+b[2] = 3.4100000000
+b[3] = 14.5455555556
+b[4] = 14.7777777778
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 14.7777777778
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.4671111111
+b[1] = 12.5121481481
+b[2] = 3.6671111111
+b[3] = 15.3121481481
+b[4] = 15.8251851852
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 15.8251851852
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.3166666667
+b[1] = 11.9944444444
+b[2] = 3.5166666667
+b[3] = 14.7944444444
+b[4] = 15.4888888889
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 15.4888888889
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.5123456790
+b[1] = 12.6176954733
+b[2] = 3.7123456790
+b[3] = 15.4176954733
+b[4] = 16.1267489712
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 16.1267489712
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 1.9357142857
+b[1] = 11.1055555556
+b[2] = 3.1357142857
+b[3] = 13.9055555556
+b[4] = 12.9492063492
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 12.9492063492
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.2346938776
+b[1] = 11.9698412698
+b[2] = 3.4346938776
+b[3] = 14.7698412698
+b[4] = 14.2757369615
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 14.2757369615
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.3166666667
+b[1] = 11.9944444444
+b[2] = 3.5166666667
+b[3] = 14.7944444444
+b[4] = 15.4888888889
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 15.4888888889
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.5123456790
+b[1] = 12.6176954733
+b[2] = 3.7123456790
+b[3] = 15.4176954733
+b[4] = 16.1267489712
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 16.1267489712
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.2100000000
+b[1] = 11.7455555556
+b[2] = 3.4100000000
+b[3] = 14.5455555556
+b[4] = 14.7777777778
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 14.7777777778
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.4671111111
+b[1] = 12.5121481481
+b[2] = 3.6671111111
+b[3] = 15.3121481481
+b[4] = 15.8251851852
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 15.8251851852
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.3166666667
+b[1] = 11.9944444444
+b[2] = 3.5166666667
+b[3] = 14.7944444444
+b[4] = 15.4888888889
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 15.4888888889
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.5123456790
+b[1] = 12.6176954733
+b[2] = 3.7123456790
+b[3] = 15.4176954733
+b[4] = 16.1267489712
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 16.1267489712
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 2.1227272727
+b[1] = 11.5419191919
+b[2] = 3.3227272727
+b[3] = 14.3419191919
+b[4] = 14.1959595960
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 14.1959595960
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.4112947658
+b[1] = 12.3819100092
+b[2] = 3.6112947658
+b[3] = 15.1819100092
+b[4] = 15.4530762167
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 15.4530762167
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 1.8147058824
+b[1] = 10.8232026144
+b[2] = 3.0147058824
+b[3] = 13.6232026144
+b[4] = 12.1424836601
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 12.1424836601
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.0790080738
+b[1] = 11.6065743945
+b[2] = 3.2790080738
+b[3] = 14.4065743945
+b[4] = 13.2378316032
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 13.2378316032
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 1.6192307692
+b[1] = 10.3670940171
+b[2] = 2.8192307692
+b[3] = 13.1670940171
+b[4] = 10.8393162393
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 10.8393162393
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 1.7587771203
+b[1] = 10.8593688363
+b[2] = 2.9587771203
+b[3] = 13.6593688363
+b[4] = 11.1029585799
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 11.1029585799
+
+Applying Boundary Conditions at t = 0.5000000000
+Vector b before boundary conditions:
+b[0] = 1.5333333333
+b[1] = 10.0000000000
+b[2] = 2.7333333333
+b[3] = 12.8000000000
+b[4] = 10.9333333333
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.5000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.5000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.5000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.5000000000
+Vector b after boundary conditions:
+b[0] = 0.5000000000
+b[1] = 4.5000000000
+b[2] = 2.5000000000
+b[3] = 6.5000000000
+b[4] = 10.9333333333
+
+Applying Boundary Conditions at t = 0.7500000000
+Vector b before boundary conditions:
+b[0] = 1.8147058824
+b[1] = 10.8232026144
+b[2] = 3.0147058824
+b[3] = 13.6232026144
+b[4] = 12.1424836601
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 0.7500000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 4.7500000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 2.7500000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 6.7500000000
+Vector b after boundary conditions:
+b[0] = 0.7500000000
+b[1] = 4.7500000000
+b[2] = 2.7500000000
+b[3] = 6.7500000000
+b[4] = 12.1424836601
+
+Applying Boundary Conditions at t = 1.0000000000
+Vector b before boundary conditions:
+b[0] = 2.0790080738
+b[1] = 11.6065743945
+b[2] = 3.2790080738
+b[3] = 14.4065743945
+b[4] = 13.2378316032
+Boundary condition: type = 1, function = 1, numVertex = 4
+Vertices: 0 1 2 3 
+Node 0 (r = 0.0000000000, z = 0.0000000000): u = 1.0000000000
+Node 1 (r = 2.0000000000, z = 0.0000000000): u = 5.0000000000
+Node 2 (r = 0.0000000000, z = 2.0000000000): u = 3.0000000000
+Node 3 (r = 2.0000000000, z = 2.0000000000): u = 7.0000000000
+Vector b after boundary conditions:
+b[0] = 1.0000000000
+b[1] = 5.0000000000
+b[2] = 3.0000000000
+b[3] = 7.0000000000
+b[4] = 13.2378316032
+
