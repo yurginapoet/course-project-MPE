@@ -91,6 +91,8 @@ void input_boundary(vector<BoundaryConditions> &cond);
 
 void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh);
 
+void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag);
+
 /*========================= LOCAL MATRICES FUNCTIONS =======================*/
 
 // Compute determinant

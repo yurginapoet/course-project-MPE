@@ -20,7 +20,8 @@ int main()
 
   portrait(mesh, elList, slae);
   Solver(mesh, elList, timemesh, slae, conds, flag, sigma);
-  print_solution(timemesh, mesh);
+  // print_solution(timemesh, mesh);
+  out_solution(timemesh, mesh, flag);
 
   return 0;
 }

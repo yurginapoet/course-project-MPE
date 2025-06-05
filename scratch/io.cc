@@ -153,3 +153,37 @@ void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh)
     cout << '\n';
   }
 }
+
+void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag)
+{
+  ofstream out("../results/3t/conv_t^4.txt");
+  // ofstream out("../results/3t/conv_cos.txt");
+  out << std::scientific << std::setprecision(8);
+
+  int timeLayers = timemesh.q.size();
+  int numNodes = mesh.size();
+
+  for (int ti = 0; ti < timeLayers; ++ti)
+  {
+    out << "t = " << timemesh.tNew[ti] << "\n";
+    out << "       r                 z               t               u     "
+           " "
+           "      "
+           "   u*              |u-u*|\n";
+
+    for (int i = 0; i < numNodes; ++i)
+    {
+      double u_num = timemesh.q[ti][i]; // Численное решение
+      double u_analytic =
+          u(mesh[i], timemesh.tNew[ti], flag);     // Аналитическое решение
+      double error = std::abs(u_num - u_analytic); // Погрешность
+
+      out << std::setw(16) << mesh[i].r << std::setw(17) << mesh[i].z
+          << std::setw(16) << timemesh.tNew[ti] << std::setw(17) << u_num
+          << std::setw(16) << u_analytic << std::setw(17) << error << "\n";
+    }
+    out << "\n";
+  }
+
+  out.close();
+}
