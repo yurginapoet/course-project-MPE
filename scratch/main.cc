@@ -7,7 +7,7 @@ int main()
   vector<el> elList;
   double sigma;
 
-  int flag = 1;
+  int flag;
 
   SLAE slae{}, LU{};
   LOS v{};

@@ -379,10 +379,10 @@ void localOptimalSchemeLU(SLAE &slae, SLAE &LU, LOS &v, int maxIter, double eps)
   for (int k = 1; k < maxIter && discrepancy > eps; k++)
   {
     double scalarp = scalarMult(p1, p1);
-    if (std::abs(scalarp) < 1e-10)
+    if (std::abs(scalarp) < 1e-35)
     {
       std::cerr << "Error: scalarp is zero or too small at iteration " << k
-                << std::endl;
+                << "it equals:" << scalarp << std::endl;
       exit(1);
     }
     double alpha = scalarMult(p1, r1) / scalarp;

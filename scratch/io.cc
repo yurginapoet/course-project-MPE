@@ -126,7 +126,7 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond)
     conditions >> type >> function >> numVertex;
 
     cond[i].type = type;
-    cond[i].function = function - 1;
+    cond[i].function = function;
     VerticesNumbers.resize(numVertex);
 
     for (int k = 0; k < numVertex; k++)

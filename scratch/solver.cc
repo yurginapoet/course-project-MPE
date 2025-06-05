@@ -457,7 +457,7 @@ void DebugSolver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
 
     // Решение системы методом LOS
     debugOut << "\n=== Solving with LOS ===\n";
-    localOptimalSchemeLU(slae, LU, vectors, 10000, 1e-14);
+    localOptimalSchemeLU(slae, LU, vectors, 10000, 1e-30);
 
     // Проверка решения
     debugOut << "Solution q:\n";
