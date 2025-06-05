@@ -1,6 +1,6 @@
 #include "header.h"
 
-void initq0q1(TimeMesh &timemesh, vector<nd> &mesh, int flag)
+void initq0q1(TMesh &timemesh, vector<nd> &mesh, int flag)
 {
   auto &qti = timemesh.qti;
   auto &qti_1 = timemesh.qti_1;
@@ -19,7 +19,7 @@ void initq0q1(TimeMesh &timemesh, vector<nd> &mesh, int flag)
   }
 }
 
-void get_global(vector<nd> &mesh, vector<el> elList, TimeMesh &timemesh,
+void get_global(vector<nd> &mesh, vector<el> elList, TMesh &timemesh,
                 SLAE &slae, vector<bc> &cond, int ti, int flag, double sigma)
 {
   auto &A = slae.A;
@@ -115,8 +115,8 @@ void mx_clearline(smx &A, int i)
   di[i] = 1.;
 }
 
-void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
-            SLAE &slae, vector<bc> &conds, int flag, double sigma)
+void Solver(vector<nd> &mesh, vector<el> &elList, TMesh &timemesh, SLAE &slae,
+            vector<bc> &conds, int flag, double sigma)
 {
   initq0q1(timemesh, mesh, flag);
 

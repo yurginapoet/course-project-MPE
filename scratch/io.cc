@@ -49,7 +49,7 @@ void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum)
   in.close();
 }
 
-void input_timemesh(TimeMesh &time)
+void input_timemesh(TMesh &time)
 {
   int countTimeLayer = 0;
 
@@ -64,7 +64,7 @@ void input_timemesh(TimeMesh &time)
   timeMesh.close();
 }
 
-void input_split_timemesh(TimeMesh &time)
+void input_split_timemesh(TMesh &time)
 {
   auto &tNew = time.tNew;
 
@@ -135,7 +135,7 @@ void input_boundary(vector<bc> &cond)
   }
 }
 
-void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh)
+void print_solution(const TMesh &timemesh, const vector<nd> &mesh)
 {
   int timeLayers = timemesh.q.size();
   int numNodes = mesh.size();
@@ -154,7 +154,7 @@ void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh)
   }
 }
 
-void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag)
+void out_solution(TMesh &timemesh, vector<nd> &mesh, int flag)
 {
   ofstream out("../results/wtfile.txt");
   // ofstream out("../results/3t/conv_cos.txt");

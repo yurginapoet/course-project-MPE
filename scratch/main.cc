@@ -10,7 +10,7 @@ int main()
 
   SLAE slae{}, LU{};
   LOS v{};
-  TimeMesh timemesh{};
+  TMesh timemesh{};
   vector<bc> conds{};
 
   input(mesh, elList, sigma, flag);

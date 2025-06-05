@@ -31,7 +31,7 @@ struct el
 };
 
 // time mesh structure
-struct TimeMesh
+struct TMesh
 {
   vector<double> t{};
   vector<double> tNew{};
@@ -81,15 +81,15 @@ struct bc
 // Input data
 void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum);
 // Read time mesh
-void input_timemesh(TimeMesh &time);
+void input_timemesh(TMesh &time);
 // Read time steps
-void input_split_timemesh(TimeMesh &time);
+void input_split_timemesh(TMesh &time);
 // boundaries input
 void input_boundary(vector<bc> &cond);
 // print solution to the terminal
-void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh);
+void print_solution(const TMesh &timemesh, const vector<nd> &mesh);
 // output solution to the file
-void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag);
+void out_solution(TMesh &timemesh, vector<nd> &mesh, int flag);
 
 /*========================= LOCAL MATRICES FUNCTIONS =======================*/
 
@@ -145,15 +145,15 @@ void clearSLAE(SLAE &slae);
 /*============================= SOLVER FUNCTIONS =============================*/
 
 // solver
-void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
-            SLAE &slae, vector<bc> &conds, int flag, double sigma);
+void Solver(vector<nd> &mesh, vector<el> &elList, TMesh &timemesh, SLAE &slae,
+            vector<bc> &conds, int flag, double sigma);
 
 // get global sparse matrix
-void get_global(vector<nd> &mesh, vector<el> elList, TimeMesh &timemesh,
+void get_global(vector<nd> &mesh, vector<el> elList, TMesh &timemesh,
                 SLAE &slae, vector<bc> &cond, int ti, int flag, double sigma);
 
 // initialize qti_2 and qti_1 for the first two time steps
-void initq0q1(TimeMesh &timemesh, vector<nd> &mesh, int flag);
+void initq0q1(TMesh &timemesh, vector<nd> &mesh, int flag);
 // apply first boundary conditions
 void bc1(SLAE &slae, vector<bc> &cond, vector<nd> mesh, double tValue);
 // clear line in sparse matrix leaving only diagonal element
