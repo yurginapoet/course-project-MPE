@@ -11,7 +11,7 @@ int main()
   SLAE slae{}, LU{};
   LOS v{};
   TimeMesh timemesh{};
-  vector<BoundaryConditions> conds{};
+  vector<bc> conds{};
 
   input(mesh, elList, sigma, flag);
   input_timemesh(timemesh);

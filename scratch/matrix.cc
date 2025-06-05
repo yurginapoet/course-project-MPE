@@ -1,7 +1,7 @@
 #include "header.h"
 
 /*======================= MATRIX & VECTOR OPERATIONS =========================*/
-void add_mx(SparseMatrix &A, el elem, vector<vector<double>> &localMatrix)
+void add_mx(smx &A, el elem, vector<vector<double>> &localMatrix)
 {
   const int sizeLocal = 3;
   auto locV = elem.nds;
@@ -23,7 +23,7 @@ void add_vec(vector<double> &b, el &elem, vector<double> &bLocal)
     b[locV[i].gl_num] += bLocal[i];
 }
 
-void add_el(SparseMatrix &A, int i, int j, double elem)
+void add_el(smx &A, int i, int j, double elem)
 {
   auto &ig = A.ig, &jg = A.jg;
   auto &ggl = A.ggl, &ggu = A.ggu, &di = A.di;
@@ -118,7 +118,7 @@ void mult_vec_num(vector<double> &a, double coef, vector<double> &res)
     res[i] = a[i] * coef;
 }
 
-void mult_smx_vec(SparseMatrix &A, vector<double> &x, vector<double> &F)
+void mult_smx_vec(smx &A, vector<double> &x, vector<double> &F)
 {
   auto &ig = A.ig, &jg = A.jg;
   auto &di = A.di, &ggl = A.ggl, &ggu = A.ggu;

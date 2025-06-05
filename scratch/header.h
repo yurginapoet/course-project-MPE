@@ -49,10 +49,8 @@ struct TimeMesh
   void save_ti(int ti) { q[ti] = qti; };
 };
 
-// time mesh funcs
-
 // sparse matrix structure
-struct SparseMatrix
+struct smx
 {
   vector<int> ig{}, jg{};
   vector<double> ggl{}, ggu{}, di{};
@@ -61,7 +59,7 @@ struct SparseMatrix
 // SLAE structure
 struct SLAE
 {
-  SparseMatrix A{};
+  smx A{};
   vector<double> q{}, b{};
 };
 
@@ -72,10 +70,10 @@ struct LOS
 };
 
 // boundary conditions structure
-struct BoundaryConditions
+struct bc
 {
   int type{}, function{};
-  vector<int> VerticesNumbers{};
+  vector<int> ndnum{}; // number of nodes on the boundary
 };
 
 /*============================== I/O  FUNCTIONS =============================*/
@@ -87,10 +85,10 @@ void input_timemesh(TimeMesh &time);
 // Read time steps
 void input_split_timemesh(TimeMesh &time);
 // boundaries input
-void input_boundary(vector<BoundaryConditions> &cond);
-
+void input_boundary(vector<bc> &cond);
+// print solution to the terminal
 void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh);
-
+// output solution to the file
 void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag);
 
 /*========================= LOCAL MATRICES FUNCTIONS =======================*/
@@ -111,25 +109,36 @@ void getG(vector<vector<double>> &G, el e);
 void getb(vector<double> &b, el e, double t, double gamma, int flag);
 
 /*======================== SPARSE MATRICES FUNCTIONS =======================*/
-// Get portrait sparse matrix
+// Get portrait of the sparse matrix
 void portrait(vector<nd> &mesh, vector<el> &elList, SLAE &slae);
-// Get global matrix and vector
-void add_mx(SparseMatrix &A, el elem, vector<vector<double>> &localMatrix);
+// add matrix to the global sparse matrix
+void add_mx(smx &A, el elem, vector<vector<double>> &localMatrix);
+// add vector to the global vector
 void add_vec(vector<double> &b, el &elem, vector<double> &bLocal);
-void add_el(SparseMatrix &A, int i, int j, double elem);
+// add element to the sparse matrix
+void add_el(smx &A, int i, int j, double elem);
+// multiplication of matrix and vector
 void mult_mx_vec(vector<vector<double>> &matrix, vector<double> &vec,
                  vector<double> &result, el &elem);
+// multiplication of matrix and number
 void mult_mx_num(vector<vector<double>> &matrix, double coef,
                  vector<vector<double>> &resultMatrix);
+// multiplication of vector and numver
 void mult_vec_num(vector<double> &vector, double coef);
 
 /*============================== LOS FUNCTIONS ==============================*/
-
+// LU factorization
 void calcLU(SLAE &slae, SLAE &LU);
+// solve SLAE using LOS with LU decomposition
 void losLU(SLAE &slae, SLAE &LU, LOS &v, int maxIter, double eps);
+// forward substitution
 void calcY(SLAE &LU, vector<double> &b, vector<double> &y);
+// backward substitution
 void calcX(SLAE &LU, vector<double> &y, vector<double> &x);
-void mult_smx_vec(SparseMatrix &A, vector<double> &x, vector<double> &F);
+
+// multiplication of sparse matrix and vector
+void mult_smx_vec(smx &A, vector<double> &x, vector<double> &F);
+// calculate discrepancy
 void calc_discrepancy(SLAE &slae, LOS &v, vector<double> &x, double &normb);
 void clearSLAE(SLAE &slae);
 
@@ -137,21 +146,18 @@ void clearSLAE(SLAE &slae);
 
 // solver
 void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
-            SLAE &slae, vector<BoundaryConditions> &conds, int flag,
-            double sigma);
+            SLAE &slae, vector<bc> &conds, int flag, double sigma);
 
-void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
-                              TimeMesh &timemesh, SLAE &slae,
-                              vector<BoundaryConditions> &cond, int ti,
-                              int flag, double sigma);
+// get global sparse matrix
+void get_global(vector<nd> &mesh, vector<el> elList, TimeMesh &timemesh,
+                SLAE &slae, vector<bc> &cond, int ti, int flag, double sigma);
 
-// init q0 q1
-void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh);
-
-void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
-                               vector<nd> mesh, double tValue);
-
-void stringMatrixInNull(SparseMatrix &A, int i);
+// initialize qti_2 and qti_1 for the first two time steps
+void initq0q1(TimeMesh &timemesh, vector<nd> &mesh, int flag);
+// apply first boundary conditions
+void bc1(SLAE &slae, vector<bc> &cond, vector<nd> mesh, double tValue);
+// clear line in sparse matrix leaving only diagonal element
+void mx_clearline(smx &A, int i);
 
 /*============================== F/U FUNCTIONS =============================*/
 

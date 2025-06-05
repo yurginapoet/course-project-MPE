@@ -1,28 +1,26 @@
 #include "header.h"
 
-void getWeightsInitU(TimeMesh &timemesh, vector<nd> &mesh, int flag)
+void initq0q1(TimeMesh &timemesh, vector<nd> &mesh, int flag)
 {
   auto &qti = timemesh.qti;
   auto &qti_1 = timemesh.qti_1;
   auto &qti_2 = timemesh.qti_2;
 
-  const int sizeMatrix = mesh.size();
+  int mxsize = mesh.size();
 
-  qti.resize(sizeMatrix);
-  qti_1.resize(sizeMatrix);
-  qti_2.resize(sizeMatrix);
+  qti.resize(mxsize);
+  qti_1.resize(mxsize);
+  qti_2.resize(mxsize);
 
-  for (int i = 0; i < sizeMatrix; i++)
+  for (int i = 0; i < mxsize; i++)
   {
     qti_2[i] = u(mesh[i], timemesh.tNew[0], flag);
     qti_1[i] = u(mesh[i], timemesh.tNew[1], flag);
   }
 }
 
-void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
-                              TimeMesh &timemesh, SLAE &slae,
-                              vector<BoundaryConditions> &cond, int ti,
-                              int flag, double sigma)
+void get_global(vector<nd> &mesh, vector<el> elList, TimeMesh &timemesh,
+                SLAE &slae, vector<bc> &cond, int ti, int flag, double sigma)
 {
   auto &A = slae.A;
   auto &b = slae.b;
@@ -31,7 +29,7 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
   double deltaT = timemesh.tNew[ti] - timemesh.tNew[ti - 2];
   double deltaT0 = timemesh.tNew[ti] - timemesh.tNew[ti - 1];
   double deltaT1 = timemesh.tNew[ti - 1] - timemesh.tNew[ti - 2];
-  int sizeSlae = mesh.size();
+  int slaesize = mesh.size();
 
   vector<vector<double>> M(3), G(3), tempMatrix(3);
   vector<double> locb(3, 0), tempVector(3, 0);
@@ -46,9 +44,9 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
 
   for (auto &elem : elList)
   {
-    // НУЖНО ДОБАВИТЬ СИГМУ
-
-    // ПРОСТО ТУПО ВЫЧИСЛЯЕМ ЛОКАЛЬНЫЕ МАТРИЦЫ И ВЕКТОРЫ
+    // calculate local matrices and vectors
+    // M - mass matrix, G - stiffness matrix, locb - local load vector
+    // tempMatrix - temporary matrix for multiplication
     getG(G, elem);
     getM(M, sigma, elem);
     getb(locb, elem, t, sigma, flag);
@@ -71,13 +69,11 @@ void GetGlobalMatrixAndVector(vector<nd> &mesh, vector<el> elList,
     mult_vec_num(tempVector, deltaT / (deltaT1 * deltaT0));
     add_vec(b, elem, tempVector);
   }
-
-  // addSecondBoundaryCondition(slae, cond, vertexCoord, t);
-  addFirstBoundaryCondition(slae, cond, mesh, t);
+  // apply first boundary conditions
+  bc1(slae, cond, mesh, t);
 }
 
-void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
-                               vector<nd> mesh, double tValue)
+void bc1(SLAE &slae, vector<bc> &cond, vector<nd> mesh, double tValue)
 {
   auto &A = slae.A;
   auto &b = slae.b;
@@ -85,21 +81,21 @@ void addFirstBoundaryCondition(SLAE &slae, vector<BoundaryConditions> &cond,
   for (auto &condition : cond)
     if (condition.type == 1)
     {
-      auto &VerticesNumbers = condition.VerticesNumbers;
+      auto &ndnum = condition.ndnum;
       int flag = condition.function;
 
-      const int numVertex = VerticesNumbers.size();
+      const int numVertex = ndnum.size();
 
       for (int i = 0; i < numVertex; i++)
       {
-        int globalNum = VerticesNumbers[i];
-        stringMatrixInNull(A, globalNum);
+        int globalNum = ndnum[i];
+        mx_clearline(A, globalNum);
         b[globalNum] = u(mesh[globalNum], tValue, flag);
       }
     }
 }
 
-void stringMatrixInNull(SparseMatrix &A, int i)
+void mx_clearline(smx &A, int i)
 {
   auto &ig = A.ig, &jg = A.jg;
   auto &ggl = A.ggl, &ggu = A.ggu, &di = A.di;
@@ -120,10 +116,9 @@ void stringMatrixInNull(SparseMatrix &A, int i)
 }
 
 void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
-            SLAE &slae, vector<BoundaryConditions> &conds, int flag,
-            double sigma)
+            SLAE &slae, vector<bc> &conds, int flag, double sigma)
 {
-  getWeightsInitU(timemesh, mesh, flag);
+  initq0q1(timemesh, mesh, flag);
 
   timemesh.q[0] = timemesh.qti_2;
   timemesh.q[1] = timemesh.qti_1;
@@ -140,7 +135,7 @@ void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
     auto &A = slae.A;
     auto &b = slae.b;
     double t = timemesh.tNew[ti];
-    int sizeSlae = mesh.size();
+    int slaesize = mesh.size();
 
     vector<vector<double>> M(3, vector<double>(3, 0.0));
     vector<vector<double>> G(3, vector<double>(3, 0.0));
@@ -171,7 +166,7 @@ void Solver(vector<nd> &mesh, vector<el> &elList, TimeMesh &timemesh,
       add_vec(b, elem, tempVector);
     }
 
-    addFirstBoundaryCondition(slae, conds, mesh, t);
+    bc1(slae, conds, mesh, t);
     calcLU(slae, LU);
     losLU(slae, LU, vectors, 10000, 1e-30);
 

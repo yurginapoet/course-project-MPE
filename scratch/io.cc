@@ -110,7 +110,7 @@ void input_split_timemesh(TimeMesh &time)
   time.q.resize(time.tNew.size());
 }
 
-void input_boundary(vector<BoundaryConditions> &cond)
+void input_boundary(vector<bc> &cond)
 {
   int numEdgeConditions = 0;
 
@@ -120,7 +120,7 @@ void input_boundary(vector<BoundaryConditions> &cond)
 
   for (int i = 0; i < numEdgeConditions; i++)
   {
-    auto &VerticesNumbers = cond[i].VerticesNumbers;
+    auto &ndnum = cond[i].ndnum;
     int numVertex = 0, type = 0, function = 0;
 
     conditions >> type >> function >> numVertex;
@@ -128,10 +128,10 @@ void input_boundary(vector<BoundaryConditions> &cond)
     cond[i].type = type;
 
     cond[i].function = function;
-    VerticesNumbers.resize(numVertex);
+    ndnum.resize(numVertex);
 
     for (int k = 0; k < numVertex; k++)
-      conditions >> VerticesNumbers[k];
+      conditions >> ndnum[k];
   }
 }
 
@@ -156,7 +156,7 @@ void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh)
 
 void out_solution(TimeMesh &timemesh, vector<nd> &mesh, int flag)
 {
-  ofstream out("../results/3t/conv_t^4.txt");
+  ofstream out("../results/wtfile.txt");
   // ofstream out("../results/3t/conv_cos.txt");
   out << std::scientific << std::setprecision(8);
 
