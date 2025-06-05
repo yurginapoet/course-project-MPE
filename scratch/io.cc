@@ -49,7 +49,7 @@ void input(vector<nd> &mesh, vector<el> &elList, double &sigma, int &fnum)
   in.close();
 }
 
-void readTimeMesh(TimeMesh &time)
+void input_timemesh(TimeMesh &time)
 {
   int countTimeLayer = 0;
 
@@ -64,7 +64,7 @@ void readTimeMesh(TimeMesh &time)
   timeMesh.close();
 }
 
-void readSplitTimeMesh(TimeMesh &time)
+void input_split_timemesh(TimeMesh &time)
 {
   auto &tNew = time.tNew;
 
@@ -110,7 +110,7 @@ void readSplitTimeMesh(TimeMesh &time)
   time.q.resize(time.tNew.size());
 }
 
-void readBoundaryCondition(vector<BoundaryConditions> &cond)
+void input_boundary(vector<BoundaryConditions> &cond)
 {
   int numEdgeConditions = 0;
 
@@ -126,6 +126,7 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond)
     conditions >> type >> function >> numVertex;
 
     cond[i].type = type;
+
     cond[i].function = function;
     VerticesNumbers.resize(numVertex);
 
@@ -134,7 +135,7 @@ void readBoundaryCondition(vector<BoundaryConditions> &cond)
   }
 }
 
-void PrintSolution(const TimeMesh &timemesh, const vector<nd> &mesh)
+void print_solution(const TimeMesh &timemesh, const vector<nd> &mesh)
 {
   int timeLayers = timemesh.q.size();
   int numNodes = mesh.size();

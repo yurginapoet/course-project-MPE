@@ -30,16 +30,16 @@ double u(nd &n, double t, int flag)
   {
   case 1:
     // return t;
-    return /* n.r + */ n.z + t;
+    return n.z + t;
   case 2:
     // return t * t;
-    return /* n.r + */ n.z + t * t;
+    return n.z + t * t;
   case 3:
     // return t * t * t;
-    return /* n.r + */ n.z + t * t * t;
+    return n.z + t * t * t;
   case 4:
     // return t * t * t * t;
-    return /* n.r + */ n.z + t * t * t * t;
+    return n.z + t * t * t * t;
   case 5:
     return cos(t);
 
@@ -48,5 +48,3 @@ double u(nd &n, double t, int flag)
     // to be continued...
   }
 }
-
-double uInit(nd &n, double t, int flag) { return u(n, t, flag); }
